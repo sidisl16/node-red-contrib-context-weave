@@ -1,9 +1,8 @@
 # ContextWeave for Node-RED
 
 [![Build](https://github.com/sidisl16/node-red-contrib-context-weave/actions/workflows/ci.yml/badge.svg?event=pull_request)](https://github.com/sidisl16/node-red-contrib-context-weave/actions/workflows/ci.yml)
-[![Quality and coverage](https://github.com/sidisl16/node-red-contrib-context-weave/actions/workflows/quality.yml/badge.svg?event=pull_request)](https://github.com/sidisl16/node-red-contrib-context-weave/actions/workflows/quality.yml)
-
-**Unit-test line coverage: 91.05%** · Run `npm run coverage:unit` to reproduce this measurement. The end-to-end Node-RED test runs separately in the full suite.
+[![Quality checks](https://github.com/sidisl16/node-red-contrib-context-weave/actions/workflows/quality.yml/badge.svg?event=pull_request)](https://github.com/sidisl16/node-red-contrib-context-weave/actions/workflows/quality.yml)
+[![Unit-test line coverage: 91.05%](https://img.shields.io/badge/unit%20test%20coverage-91.05%25-brightgreen)](https://github.com/sidisl16/node-red-contrib-context-weave/actions/workflows/quality.yml)
 
 ## What is ContextWeave?
 
