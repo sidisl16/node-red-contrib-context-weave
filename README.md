@@ -5,19 +5,57 @@
 
 Connect a data source, index its documents and answer questions with citations. The **context weave** palette includes 34 flow nodes and five reusable configuration nodes. SQLite stores documents, vectors, keyword indexes and conversation history under the Node-RED user directory.
 
+## Explore the support flow
+
+The example has two entry points. Index the article once, then ask questions against the same library.
+
+```mermaid
+flowchart LR
+    article["Support article"] --> index["index"]
+    index -->|stores chunks| kb[("Support library")]
+    kb -->|matching chunks| retrieve["retrieve"]
+    question["Question"] --> retrieve
+    retrieve --> rerank["rerank"] --> answer["answer with citations"]
+```
+
+<details>
+<summary>Follow an article from your connector into the library</summary>
+
+```mermaid
+flowchart TD
+    source["Inject a record or wire your connector"] --> map["source-map"]
+    map -->|upsert| parse["parse-content"] --> record["record-ingest"]
+    record --> split["split"] --> index["index"] --> debug["Debug: Index result"]
+    map -->|delete event| del["document-delete"]
+```
+
+To use your own data, replace **Index sample password-reset article** with your connector. Open **Map connector record** and select the fields for the stable record ID, content and metadata. The example uses `tenant_id` to keep tenants separate and retrieves records with `status` set to `published`.
+
+</details>
+
+<details>
+<summary>Follow a question from Inject or HTTP to a cited answer</summary>
+
+```mermaid
+flowchart TD
+    inject["Inject: Ask about password reset"] --> validate["Validate question and identity"]
+    http["POST /context-weave/ask"] --> validate
+    validate --> retrieve["retrieve"] --> rerank["rerank"] --> answer["answer"]
+    answer --> format["Return answer + citations"]
+    format -->|Inject| debug["Debug sidebar"]
+    format -->|HTTP| response["HTTP response"]
+```
+
+Try **When does the reset link expire?** The article says **30 minutes**. Expand `payload.citations` in Debug to find the document ID behind the answer.
+
+</details>
+
 ## Try the support flow
 
 1. Use Node.js 24.14+ with SQLite FTS5 support and Node-RED 5.0.10+. From the cloned package directory, run `npm pack`. From your Node-RED user directory, run `npm install /absolute/path/to/node-red-contrib-context-weave-0.1.0.tgz` and restart Node-RED.
 2. Start Ollama on the Node-RED host. Run `ollama pull nomic-embed-text` and `ollama pull llama3.2`. The example connects to `http://localhost:11434`.
 3. Open **Menu → Import → Examples → node-red-contrib-context-weave → support-rag**, then deploy the flow. You can also import [the flow JSON](examples/support-rag.json) directly.
 4. Click **Index sample password-reset article**. When **Index result** appears in Debug, click **Ask about password reset**. The response should cite the article and say that the link expires after 30 minutes.
-
-To use your own data, replace the article Inject node with your connector. In **Map connector record**, select the message properties containing the stable record ID, content and metadata. The example expects `tenant_id` and indexes published records for retrieval.
-
-```text
-Connector → source-map → parse-content → record-ingest → split → index
-Question  → retrieve → rerank → answer → answer text and citations
-```
 
 ## Configure models and access
 
