@@ -56,6 +56,7 @@ RED.nodes.registerType("context-weave-answer", {
     "error"
   ],
   "icon": "font-awesome/fa-book",
+  paletteLabel: function () { return "answer"; },
   label: function () { return this.name || "answer"; },
   oneditprepare: function () {
     $('#node-input-retrievalRecipe').val(JSON.stringify(this.retrievalRecipe ?? {}, null, 2));

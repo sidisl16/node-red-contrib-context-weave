@@ -50,6 +50,7 @@ RED.nodes.registerType("context-weave-model-profile", {
       "value": false
     }
   },
+  paletteLabel: function () { return "model-profile"; },
   label: function () { return this.name || "model-profile"; },
   oneditprepare: function () {
     $('#node-config-input-fallbackProfiles').val(JSON.stringify(this.fallbackProfiles ?? [], null, 2));

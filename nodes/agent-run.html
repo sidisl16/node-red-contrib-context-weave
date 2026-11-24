@@ -60,6 +60,7 @@ RED.nodes.registerType("context-weave-agent-run", {
     "error"
   ],
   "icon": "font-awesome/fa-book",
+  paletteLabel: function () { return "agent-run"; },
   label: function () { return this.name || "agent-run"; },
   oneditprepare: function () {
     $('#node-input-tools').val(JSON.stringify(this.tools ?? [], null, 2));

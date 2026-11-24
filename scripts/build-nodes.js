@@ -54,6 +54,7 @@ for (const [type, props] of Object.entries(fields).sort(([a],[b])=>a.localeCompa
   if(type==='provider') row('apiKey','<input id="'+prefix+'apiKey" type="password" autocomplete="new-password">');
   const def={category:configOnly?'config':'context weave',defaults,...(configOnly?{}:{color:'#b2d5cc',inputs:1,outputs:labels.length,outputLabels:labels,icon:'font-awesome/fa-book'}),...(type==='provider'?{credentials:{apiKey:{type:'password'}}}:{})};
   const hooks=[
+    "  paletteLabel: function () { return "+JSON.stringify(type)+"; }",
     "  label: function () { return this.name || "+JSON.stringify(type)+"; }",
     "  oneditprepare: function () {\n"+jsonFields.map(k=>"    $('#"+prefix+k+"').val(JSON.stringify(this."+k+" ?? "+JSON.stringify(props[k])+", null, 2));").join('\n')+"\n  }",
     "  oneditsave: function () {\n"+[...jsonFields.map(k=>"    this."+k+" = JSON.parse($('#"+prefix+k+"').val()); $('#"+prefix+k+"').remove();"),...numbers.map(k=>"    this."+k+" = Number($('#"+prefix+k+"').val()); $('#"+prefix+k+"').remove();")].join('\n')+"\n  }"

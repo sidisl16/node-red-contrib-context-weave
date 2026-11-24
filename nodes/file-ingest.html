@@ -63,6 +63,7 @@ RED.nodes.registerType("context-weave-file-ingest", {
     "error"
   ],
   "icon": "font-awesome/fa-book",
+  paletteLabel: function () { return "file-ingest"; },
   label: function () { return this.name || "file-ingest"; },
   oneditprepare: function () {
 

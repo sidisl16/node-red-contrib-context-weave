@@ -64,6 +64,7 @@ RED.nodes.registerType("context-weave-retrieve", {
     "error"
   ],
   "icon": "font-awesome/fa-book",
+  paletteLabel: function () { return "retrieve"; },
   label: function () { return this.name || "retrieve"; },
   oneditprepare: function () {
     $('#node-input-libraries').val(JSON.stringify(this.libraries ?? [], null, 2));

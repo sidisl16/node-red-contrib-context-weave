@@ -52,6 +52,7 @@ RED.nodes.registerType("context-weave-rerank", {
     "error"
   ],
   "icon": "font-awesome/fa-book",
+  paletteLabel: function () { return "rerank"; },
   label: function () { return this.name || "rerank"; },
   oneditprepare: function () {
     $('#node-input-stages').val(JSON.stringify(this.stages ?? [], null, 2));

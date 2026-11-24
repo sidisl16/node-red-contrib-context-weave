@@ -35,6 +35,7 @@ RED.nodes.registerType("context-weave-library", {
       "value": false
     }
   },
+  paletteLabel: function () { return "library"; },
   label: function () { return this.name || "library"; },
   oneditprepare: function () {
     $('#node-config-input-filterAttributes').val(JSON.stringify(this.filterAttributes ?? [], null, 2));

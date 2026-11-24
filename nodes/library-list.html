@@ -31,6 +31,7 @@ RED.nodes.registerType("context-weave-library-list", {
     "error"
   ],
   "icon": "font-awesome/fa-book",
+  paletteLabel: function () { return "library-list"; },
   label: function () { return this.name || "library-list"; },
   oneditprepare: function () {
     $('#node-input-libraries').val(JSON.stringify(this.libraries ?? [], null, 2));

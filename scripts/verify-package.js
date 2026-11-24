@@ -16,6 +16,9 @@ for (const [name, js] of Object.entries(pkg['node-red'].nodes)) {
   assert.equal(typeof capture.definition,'function');
   vm.runInNewContext(html.match(/<script type="text\/javascript">([\s\S]+?)<\/script>/)[1],{RED});
   assert.equal(capture.definition.category,ports(short).length?'context weave':'config');
+  assert.equal(capture.definition.paletteLabel(),short);
+  assert.equal(capture.definition.label.call({}),short);
+  assert.ok(!capture.definition.paletteLabel().includes('context-weave-'));
   assert.ok(html.includes('data-template-name="'+name+'"'));
   assert.ok(html.includes('data-help-name="'+name+'"'));
   if (ports(short).length) assert.equal(capture.definition.outputs,ports(short).length);
