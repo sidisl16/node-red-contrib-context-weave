@@ -3,7 +3,18 @@
 [![Build](https://github.com/sidisl16/node-red-contrib-context-weave/actions/workflows/ci.yml/badge.svg?event=pull_request)](https://github.com/sidisl16/node-red-contrib-context-weave/actions/workflows/ci.yml)
 [![Quality and coverage](https://github.com/sidisl16/node-red-contrib-context-weave/actions/workflows/quality.yml/badge.svg?event=pull_request)](https://github.com/sidisl16/node-red-contrib-context-weave/actions/workflows/quality.yml)
 
-Connect a data source, index its documents and answer questions with citations. The **context weave** palette includes 34 flow nodes and five reusable configuration nodes. SQLite stores documents, vectors, keyword indexes and conversation history under the Node-RED user directory.
+**Unit-test line coverage: 91.38%** · Run `npm run coverage:unit` to reproduce this measurement. The end-to-end Node-RED test runs separately in the full suite.
+
+## What is ContextWeave?
+
+ContextWeave is a set of Node-RED nodes for answering questions using your own documents. Connect a data source, index its documents, and the flow can find relevant passages and cite them in its answers. The **context weave** palette includes 34 flow nodes and five reusable configuration nodes. SQLite stores documents, vectors, keyword indexes and conversation history under the Node-RED user directory.
+
+## Getting started
+
+1. Use Node.js 24.14+ with SQLite FTS5 support and Node-RED 5.0.10+. From the cloned package directory, run `npm pack`. From your Node-RED user directory, run `npm install /absolute/path/to/node-red-contrib-context-weave-0.1.0.tgz` and restart Node-RED.
+2. Start Ollama on the Node-RED host. Run `ollama pull nomic-embed-text` and `ollama pull llama3.2`. The example connects to `http://localhost:11434`.
+3. Open **Menu → Import → Examples → node-red-contrib-context-weave → support-rag**, then deploy the flow. You can also import [the flow JSON](examples/support-rag.json) directly.
+4. Click **Index sample password-reset article**. When **Index result** appears in Debug, click **Ask about password reset**. The response should cite the article and say that the link expires after 30 minutes.
 
 ## Explore the support flow
 
@@ -49,13 +60,6 @@ flowchart TD
 Try **When does the reset link expire?** The article says **30 minutes**. Expand `payload.citations` in Debug to find the document ID behind the answer.
 
 </details>
-
-## Try the support flow
-
-1. Use Node.js 24.14+ with SQLite FTS5 support and Node-RED 5.0.10+. From the cloned package directory, run `npm pack`. From your Node-RED user directory, run `npm install /absolute/path/to/node-red-contrib-context-weave-0.1.0.tgz` and restart Node-RED.
-2. Start Ollama on the Node-RED host. Run `ollama pull nomic-embed-text` and `ollama pull llama3.2`. The example connects to `http://localhost:11434`.
-3. Open **Menu → Import → Examples → node-red-contrib-context-weave → support-rag**, then deploy the flow. You can also import [the flow JSON](examples/support-rag.json) directly.
-4. Click **Index sample password-reset article**. When **Index result** appears in Debug, click **Ask about password reset**. The response should cite the article and say that the link expires after 30 minutes.
 
 ## Configure models and access
 
