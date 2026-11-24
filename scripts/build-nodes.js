@@ -5,6 +5,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const {config,ports} = require('../lib/definitions');
 const {choicesFor,conditionFor,describe,references} = require('./editor-schema');
+const {visualFor} = require('./node-visuals');
 const fields = Object.assign({},config,require('../lib/ingest-fields'),require('../lib/knowledge-fields'),require('../lib/model-fields'));
 const esc = s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
 const design = fs.readFileSync('docs/design.md','utf8');
@@ -18,6 +19,7 @@ pkg['node-red'].nodes = {};
 for (const [type, props] of Object.entries(fields).sort(([a],[b])=>a.localeCompare(b))) {
   const id = 'context-weave-'+type;
   const configOnly = Object.hasOwn(config,type);
+  const visual = visualFor(type);
   const prefix = configOnly ? 'node-config-input-' : 'node-input-';
   const labels=ports(type);
   const defaults={name:{value:''}};
@@ -60,7 +62,7 @@ for (const [type, props] of Object.entries(fields).sort(([a],[b])=>a.localeCompa
     ...controllers.map(key=>'    $(\'#'+prefix+key+'\').on(\'change.contextWeaveVisibility\', updateVisibility);'),
     '    updateVisibility();'
   ].join('\n') : '';
-  const def={category:configOnly?'config':'context weave',defaults,...(configOnly?{}:{color:'#b2d5cc',inputs:1,outputs:labels.length,outputLabels:labels,icon:'font-awesome/fa-book'}),...(type==='provider'?{credentials:{apiKey:{type:'password'}}}:{})};
+  const def={category:configOnly?'config':'context weave',defaults,...(configOnly?{}:{color:visual.color,inputs:1,outputs:labels.length,outputLabels:labels,icon:visual.icon}),...(type==='provider'?{credentials:{apiKey:{type:'password'}}}:{})};
   const hooks=[
     "  paletteLabel: function () { return "+JSON.stringify(type)+"; }",
     "  label: function () { return this.name || "+JSON.stringify(type)+"; }",

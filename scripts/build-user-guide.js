@@ -4,6 +4,7 @@ const fs = require('node:fs');
 const {config} = require('../lib/definitions');
 const fields = Object.assign({},config,require('../lib/ingest-fields'),require('../lib/knowledge-fields'),require('../lib/model-fields'));
 const {choicesFor,conditionFor,describe,references} = require('./editor-schema');
+const {families,visualFor} = require('./node-visuals');
 
 const groups = {
   'Configuration nodes':['provider','model-profile','library','source-profile','conversation-store'],
@@ -79,6 +80,21 @@ This is the practical manual for building ContextWeave flows in Node-RED. It cov
 - A generation model only for \`answer\`, \`generate\`, \`fact-check\`, \`document-summarize\`, and \`agent-run\`.
 - SQLite works without a separate vector server. Qdrant, pgvector, and Chroma are optional.
 - A Tika provider is needed for PDFs and other binary formats. Plain text, Markdown, HTML, and structured records use built-in parsing.
+
+### Read the palette at a glance
+
+Every operational node has an action-specific icon and a color that identifies its job. Colors support scanning; labels and ports remain the source of truth for behavior.
+
+| Color | Family | Meaning | Typical nodes |
+| --- | --- | --- | --- |
+| Slate (\`${families.configuration.color}\`) | Configuration | ${families.configuration.meaning} | \`provider\`, \`model-profile\`, \`library\` |
+| Blue-gray (\`${families.lifecycle.color}\`) | Library lifecycle | ${families.lifecycle.meaning} | \`library-create\`, \`library-info\`, \`library-delete\` |
+| Orange (\`${families.ingest.color}\`) | Ingestion | ${families.ingest.meaning} | \`source-map\`, \`split\`, \`index\` |
+| Blue (\`${families.retrieval.color}\`) | Retrieval | ${families.retrieval.meaning} | \`retrieve\`, \`rerank\`, \`filter\` |
+| Purple (\`${families.generation.color}\`) | Generation | ${families.generation.meaning} | \`answer\`, \`generate\`, \`cite\` |
+| Teal (\`${families.conversation.color}\`) | Conversations and agents | ${families.conversation.meaning} | \`conversation-turn\`, \`agent-run\` |
+
+Example: the orange **scissors** icon is \`split\`; the blue **search** icon is \`retrieve\`; the purple **comment** icon is \`answer\`; the orange **database** icon is \`index\`. This makes the usual pipeline easy to read left to right: orange ingestion → blue retrieval → purple answer.
 
 ## Understanding libraries
 
@@ -165,6 +181,8 @@ for (const [group,nodes] of Object.entries(groups)) {
     const item=catalogue[type]||{};
     const isConfig=Object.hasOwn(config,type);
     out.push('### `'+type+'`\n');
+    const visual=visualFor(type);
+    out.push('**Palette:** '+visual.family+' family · color '+code(visual.color)+' · icon '+code(visual.icon.replace('font-awesome/fa-','fa-'))+'.\n');
     out.push((item.summary||('Reusable '+type.replaceAll('-',' ')+' configuration.'))+'\n');
     out.push('**How to use it:** '+usage(type,isConfig)+'\n');
     if (!isConfig) out.push('**Ports:** '+(item.input||'message input')+' → '+(item.output||'success result')+'; failures use the error output.\n');

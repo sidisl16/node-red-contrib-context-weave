@@ -20,6 +20,21 @@ This is the practical manual for building ContextWeave flows in Node-RED. It cov
 - SQLite works without a separate vector server. Qdrant, pgvector, and Chroma are optional.
 - A Tika provider is needed for PDFs and other binary formats. Plain text, Markdown, HTML, and structured records use built-in parsing.
 
+### Read the palette at a glance
+
+Every operational node has an action-specific icon and a color that identifies its job. Colors support scanning; labels and ports remain the source of truth for behavior.
+
+| Color | Family | Meaning | Typical nodes |
+| --- | --- | --- | --- |
+| Slate (`#607D8B`) | Configuration | Reusable connection, model, library, source, or conversation settings. | `provider`, `model-profile`, `library` |
+| Blue-gray (`#78909C`) | Library lifecycle | Create, inspect, update, reset, or delete a library. | `library-create`, `library-info`, `library-delete` |
+| Orange (`#F4A261`) | Ingestion | Bring content in, normalize it, split it, or write it to a library. | `source-map`, `split`, `index` |
+| Blue (`#5B8DEF`) | Retrieval | Find, rank, filter, expand, or format evidence. | `retrieve`, `rerank`, `filter` |
+| Purple (`#A78BFA`) | Generation | Generate, validate, or render grounded model output. | `answer`, `generate`, `cite` |
+| Teal (`#2AA198`) | Conversations and agents | Manage conversations and bounded agent actions. | `conversation-turn`, `agent-run` |
+
+Example: the orange **scissors** icon is `split`; the blue **search** icon is `retrieve`; the purple **comment** icon is `answer`; the orange **database** icon is `index`. This makes the usual pipeline easy to read left to right: orange ingestion → blue retrieval → purple answer.
+
 ## Understanding libraries
 
 A **library** is ContextWeave’s logical knowledge collection. It binds a stable library ID to one embedding model, an access policy, filterable metadata fields, and an optional external vector database. Documents, chunks, retrieval history, and index compatibility information belong to that library. It is not a folder watcher or source connector: your Node-RED connector supplies the records.
@@ -105,6 +120,8 @@ Do not switch an existing library between SQLite and an external vector provider
 
 ### `provider`
 
+**Palette:** configuration family · color `#607D8B` · icon `fa-plug`.
+
 Reusable provider configuration.
 
 **How to use it:** Create it from a matching configuration selector, give it a clear name, save it, and reuse it in dependent nodes. It has no wires.
@@ -118,6 +135,8 @@ Reusable provider configuration.
 | `apiKey` | string | _empty_ | See “What it controls”; runtime validation applies. | Always | Secret used by the selected service. Node-RED stores it as a credential. |
 
 ### `model-profile`
+
+**Palette:** configuration family · color `#607D8B` · icon `fa-microchip`.
 
 Reusable model profile configuration.
 
@@ -143,6 +162,8 @@ Reusable model profile configuration.
 
 ### `library`
 
+**Palette:** configuration family · color `#607D8B` · icon `fa-database`.
+
 Reusable library configuration.
 
 **How to use it:** Create it from a matching configuration selector, give it a clear name, save it, and reuse it in dependent nodes. It has no wires.
@@ -159,6 +180,8 @@ Reusable library configuration.
 | `allowDestructive` | boolean | `false` | `true` or `false` | Always | Allows reset and deletion operations for this library. |
 
 ### `source-profile`
+
+**Palette:** configuration family · color `#607D8B` · icon `fa-exchange`.
 
 Reusable source profile configuration.
 
@@ -192,6 +215,8 @@ Reusable source profile configuration.
 
 ### `conversation-store`
 
+**Palette:** configuration family · color `#607D8B` · icon `fa-comments`.
+
 Reusable conversation store configuration.
 
 **How to use it:** Create it from a matching configuration selector, give it a clear name, save it, and reuse it in dependent nodes. It has no wires.
@@ -209,6 +234,8 @@ Reusable conversation store configuration.
 
 ### `library-create`
 
+**Palette:** lifecycle family · color `#78909C` · icon `fa-plus-circle`.
+
 Creates storage/index namespaces and persists metadata schema. Idempotency key supported.
 
 **How to use it:** Wire a message containing **optional `msg.contextWeave.librarySpec`** into the node, configure the options below, and read **library descriptor** from the success/complete output. Always wire the error output during development and production.
@@ -221,6 +248,8 @@ Creates storage/index namespaces and persists metadata schema. Idempotency key s
 | `library` | string | _empty_ | Select a **library** configuration node. | Always | Library configuration used by this operation. |
 
 ### `library-list`
+
+**Palette:** lifecycle family · color `#78909C` · icon `fa-list`.
 
 Lists only libraries allowed by configured server policy.
 
@@ -239,6 +268,8 @@ Lists only libraries allowed by configured server policy.
 
 ### `library-info`
 
+**Palette:** lifecycle family · color `#78909C` · icon `fa-info-circle`.
+
 Returns schema, provider versions, document/chunk counts, last indexing job.
 
 **How to use it:** Wire a message containing **library ID** into the node, configure the options below, and read **descriptor + size/statistics** from the success/complete output. Always wire the error output during development and production.
@@ -251,6 +282,8 @@ Returns schema, provider versions, document/chunk counts, last indexing job.
 | `library` | string | _empty_ | Select a **library** configuration node. | Always | Library configuration used by this operation. |
 
 ### `library-update`
+
+**Palette:** lifecycle family · color `#78909C` · icon `fa-pencil`.
 
 Allows name/description/additive schema/default recipes. Rejects unsafe changes without migration flag.
 
@@ -267,6 +300,8 @@ Allows name/description/additive schema/default recipes. Rejects unsafe changes 
 
 ### `library-reset`
 
+**Palette:** lifecycle family · color `#78909C` · icon `fa-refresh`.
+
 Deletes indexed document/chunk data but preserves library config. Use a two-stage editor confirmation and audit event.
 
 **How to use it:** Wire a message containing **library ID + `confirm: true`** into the node, configure the options below, and read **reset report** from the success/complete output. Always wire the error output during development and production.
@@ -282,6 +317,8 @@ Deletes indexed document/chunk data but preserves library config. Use a two-stag
 | `dryRun` | boolean | `true` | `true` or `false` | Always | Report the destructive action without applying it. |
 
 ### `library-delete`
+
+**Palette:** lifecycle family · color `#78909C` · icon `fa-trash`.
 
 Deletes config and all associated data. Disabled by default in runtime settings.
 
@@ -301,6 +338,8 @@ Deletes config and all associated data. Disabled by default in runtime settings.
 ## Ingestion and documents
 
 ### `source-map`
+
+**Palette:** ingest family · color `#F4A261` · icon `fa-exchange`.
 
 Maps arbitrary Node-RED message properties to a stable source/item envelope; does not parse or index.
 
@@ -337,6 +376,8 @@ Maps arbitrary Node-RED message properties to a stable source/item envelope; doe
 
 ### `parse-content`
 
+**Palette:** ingest family · color `#F4A261` · icon `fa-file-text-o`.
+
 Extracts text, tables, page/section locators, and parser warnings through the chosen parser route.
 
 **How to use it:** Wire a message containing **normalized source envelope containing a file, HTML, Markdown, or text** into the node, configure the options below, and read **parsed document/sections** from the success/complete output. Always wire the error output during development and production.
@@ -356,6 +397,8 @@ Extracts text, tables, page/section locators, and parser warnings through the ch
 
 ### `record-ingest`
 
+**Palette:** ingest family · color `#F4A261` · icon `fa-sign-in`.
+
 Normalizes structured source. Use when caller controls document/section boundaries.
 
 **How to use it:** Wire a message containing **`msg.payload` or `msg.contextWeave.input.document` matching `DocumentInput`** into the node, configure the options below, and read **indexed document report** from the success/complete output. Always wire the error output during development and production.
@@ -373,6 +416,8 @@ Normalizes structured source. Use when caller controls document/section boundari
 | `metadataPath` | string | `metadata` | See “What it controls”; runtime validation applies. | Always | Path to the record metadata object. |
 
 ### `file-ingest`
+
+**Palette:** ingest family · color `#F4A261` · icon `fa-file-o`.
 
 Extracts text/tables where adapter supports it, preserves supplied metadata, then submits to pipeline. Enforce configurable file/parse-time limits.
 
@@ -401,6 +446,8 @@ Extracts text/tables where adapter supports it, preserves supplied metadata, the
 
 ### `split`
 
+**Palette:** ingest family · color `#F4A261` · icon `fa-scissors`.
+
 Deterministic splitter. Modes: sentence-window, token-window, paragraph, section, markdown headings, custom regex. Never span a section boundary by default. Persist splitter version/config.
 
 **How to use it:** Wire a message containing **normalized document** into the node, configure the options below, and read **document plus chunks** from the success/complete output. Always wire the error output during development and production.
@@ -420,6 +467,8 @@ Deterministic splitter. Modes: sentence-window, token-window, paragraph, section
 
 ### `index`
 
+**Palette:** ingest family · color `#F4A261` · icon `fa-database`.
+
 Upserts vectors + lexical entries atomically as far as adapter permits. Idempotent by document ID + content hash.
 
 **How to use it:** Wire a message containing **document/chunks** into the node, configure the options below, and read **`{documentId, chunksCreated, chunksUpdated, chunksDeleted}`** from the success/complete output. Always wire the error output during development and production.
@@ -438,6 +487,8 @@ Upserts vectors + lexical entries atomically as far as adapter permits. Idempote
 
 ### `document-get`
 
+**Palette:** ingest family · color `#F4A261` · icon `fa-file-text-o`.
+
 Retrieves source metadata and chunks only when policy allows it.
 
 **How to use it:** Wire a message containing **document ID** into the node, configure the options below, and read **complete stored document** from the success/complete output. Always wire the error output during development and production.
@@ -453,6 +504,8 @@ Retrieves source metadata and chunks only when policy allows it.
 | `includeChunks` | boolean | `false` | `true` or `false` | Always | Include stored chunks with the returned document. |
 
 ### `document-list`
+
+**Palette:** ingest family · color `#F4A261` · icon `fa-list`.
 
 Returns no chunk text by default.
 
@@ -471,6 +524,8 @@ Returns no chunk text by default.
 
 ### `document-patch`
 
+**Palette:** ingest family · color `#F4A261` · icon `fa-pencil`.
+
 Merges metadata, reindexes filter fields only if needed.
 
 **How to use it:** Wire a message containing **document ID + metadata patch** into the node, configure the options below, and read **updated descriptor** from the success/complete output. Always wire the error output during development and production.
@@ -487,6 +542,8 @@ Merges metadata, reindexes filter fields only if needed.
 | `metadataSourceType` | selector | `msg` | `msg`, `str`, `flow`, `global`, `env`, `bool`, `num`, `json` | Always | Node-RED typed-input kind used to evaluate the adjacent source value. |
 
 ### `document-replace-metadata`
+
+**Palette:** ingest family · color `#F4A261` · icon `fa-tags`.
 
 Replaces metadata exactly.
 
@@ -505,6 +562,8 @@ Replaces metadata exactly.
 
 ### `document-delete`
 
+**Palette:** ingest family · color `#F4A261` · icon `fa-trash`.
+
 Removes vectors, lexical entries, chunk rows, and source metadata.
 
 **How to use it:** Wire a message containing **document ID + `confirm`** into the node, configure the options below, and read **receipt** from the success/complete output. Always wire the error output during development and production.
@@ -522,6 +581,8 @@ Removes vectors, lexical entries, chunk rows, and source metadata.
 | `dryRun` | boolean | `true` | `true` or `false` | Always | Report the destructive action without applying it. |
 
 ### `document-summarize`
+
+**Palette:** generation family · color `#A78BFA` · icon `fa-compress`.
 
 Uses a generation provider with explicit template/model/limits. Supports normal and stream outputs.
 
@@ -542,6 +603,8 @@ Uses a generation provider with explicit template/model/limits. Supports normal 
 ## Retrieval and evidence
 
 ### `retrieve`
+
+**Palette:** retrieval family · color `#5B8DEF` · icon `fa-search`.
 
 Dense, lexical, or hybrid retrieval across one/many libraries. No LLM call.
 
@@ -571,6 +634,8 @@ Dense, lexical, or hybrid retrieval across one/many libraries. No LLM call.
 
 ### `rerank`
 
+**Palette:** retrieval family · color `#5B8DEF` · icon `fa-sort-amount-desc`.
+
 Applies one strategy or ordered strategy chain. Preserve prior scores.
 
 **How to use it:** Wire a message containing **query + evidence** into the node, configure the options below, and read **reordered evidence** from the success/complete output. Always wire the error output during development and production.
@@ -595,6 +660,8 @@ Applies one strategy or ordered strategy chain. Preserve prior scores.
 
 ### `context`
 
+**Palette:** retrieval family · color `#5B8DEF` · icon `fa-expand`.
+
 Adds surrounding text and/or highlight ranges. Cannot request sentence and character windows together.
 
 **How to use it:** Wire a message containing **evidence** into the node, configure the options below, and read **enriched evidence** from the success/complete output. Always wire the error output during development and production.
@@ -615,6 +682,8 @@ Adds surrounding text and/or highlight ranges. Cannot request sentence and chara
 
 ### `filter`
 
+**Palette:** retrieval family · color `#5B8DEF` · icon `fa-filter`.
+
 Applies post-retrieval policy/business filter. Security filters must instead be applied before retrieval.
 
 **How to use it:** Wire a message containing **evidence + filter** into the node, configure the options below, and read **filtered evidence** from the success/complete output. Always wire the error output during development and production.
@@ -630,6 +699,8 @@ Applies post-retrieval policy/business filter. Security filters must instead be 
 | `metadataFilter` | string | _empty_ | See “What it controls”; runtime validation applies. | Always | Safe metadata filter expression; raw SQL or JavaScript is never evaluated. |
 
 ### `format-evidence`
+
+**Palette:** retrieval family · color `#5B8DEF` · icon `fa-align-left`.
 
 Stable citation tokens such as `[E:abc123]`; keep full evidence separately.
 
@@ -647,6 +718,8 @@ Stable citation tokens such as `[E:abc123]`; keep full evidence separately.
 | `maxTotalChars` | number | `24000` | See “What it controls”; runtime validation applies. | Always | Total formatted evidence character budget. |
 
 ### `query-history`
+
+**Palette:** retrieval family · color `#5B8DEF` · icon `fa-history`.
 
 Optional, local-only observability. Redact prompts/content unless explicitly enabled.
 
@@ -666,6 +739,8 @@ Optional, local-only observability. Redact prompts/content unless explicitly ena
 ## Generation and citations
 
 ### `answer`
+
+**Palette:** generation family · color `#A78BFA` · icon `fa-comment`.
 
 Grounded answer from evidence only by default. Combines retrieve+rerank only when “retrieve automatically” is enabled.
 
@@ -692,6 +767,8 @@ Grounded answer from evidence only by default. Combines retrieve+rerank only whe
 
 ### `generate`
 
+**Palette:** generation family · color `#A78BFA` · icon `fa-magic`.
+
 General LLM node; must mark result as ungrounded if no evidence was used.
 
 **How to use it:** Wire a message containing **explicit messages/template + optional evidence** into the node, configure the options below, and read **model response + trace** from the success/complete output. Always wire the error output during development and production.
@@ -710,6 +787,8 @@ General LLM node; must mark result as ungrounded if no evidence was used.
 
 ### `cite`
 
+**Palette:** generation family · color `#A78BFA` · icon `fa-quote-right`.
+
 Validates/normalizes citations and can render `numeric`, `markdown`, or `html` forms.
 
 **How to use it:** Wire a message containing **answer with `[E:id]` markers + evidence** into the node, configure the options below, and read **normalized citation list/rendering** from the success/complete output. Always wire the error output during development and production.
@@ -726,6 +805,8 @@ Validates/normalizes citations and can render `numeric`, `markdown`, or `html` f
 | `minimumCitations` | number | `1` | See “What it controls”; runtime validation applies. | When `requireCitations` is enabled | Minimum valid evidence citations required. |
 
 ### `fact-check`
+
+**Palette:** generation family · color `#A78BFA` · icon `fa-check-circle`.
 
 Optional second-pass entailment/provider check. Never call a generated score “truth”.
 
@@ -746,6 +827,8 @@ Optional second-pass entailment/provider check. Never call a generated score “
 
 ### `conversation-open`
 
+**Palette:** conversation family · color `#2AA198` · icon `fa-comments`.
+
 Creates or resumes state. Enforce TTL and principal/tenant binding.
 
 **How to use it:** Wire a message containing **optional session key/metadata** into the node, configure the options below, and read **conversation descriptor** from the success/complete output. Always wire the error output during development and production.
@@ -759,6 +842,8 @@ Creates or resumes state. Enforce TTL and principal/tenant binding.
 | `idSource` | string | `contextWeave.conversation.id` | See “What it controls”; runtime validation applies. | Always | Message path or typed value read at runtime. |
 
 ### `conversation-turn`
+
+**Palette:** conversation family · color `#2AA198` · icon `fa-paper-plane`.
 
 Persists user/assistant turn only after model validation succeeds.
 
@@ -776,6 +861,8 @@ Persists user/assistant turn only after model validation succeeds.
 
 ### `conversation-read`
 
+**Palette:** conversation family · color `#2AA198` · icon `fa-book`.
+
 Returns policy-permitted turns only.
 
 **How to use it:** Wire a message containing **ID** into the node, configure the options below, and read **bounded history** from the success/complete output. Always wire the error output during development and production.
@@ -789,6 +876,8 @@ Returns policy-permitted turns only.
 | `idSource` | string | `contextWeave.conversation.id` | See “What it controls”; runtime validation applies. | Always | Message path or typed value read at runtime. |
 
 ### `conversation-delete`
+
+**Palette:** conversation family · color `#2AA198` · icon `fa-trash`.
 
 Permanently removes conversation memory.
 
@@ -805,6 +894,8 @@ Permanently removes conversation memory.
 | `dryRun` | boolean | `true` | `true` or `false` | Always | Report the destructive action without applying it. |
 
 ### `agent-run`
+
+**Palette:** conversation family · color `#2AA198` · icon `fa-bolt`.
 
 Executes a bounded tool loop with approved `ContextWeave` retrieval tools and explicit HTTP tools.
 
@@ -830,6 +921,8 @@ Executes a bounded tool loop with approved `ContextWeave` retrieval tools and ex
 | `maxEvidenceChars` | number | `24000` | See “What it controls”; runtime validation applies. | Always | Maximum total evidence characters sent to a model. |
 
 ### `agent-tool`
+
+**Palette:** conversation family · color `#2AA198` · icon `fa-wrench`.
 
 Adapter node for a user-provided, schema-validated Node-RED branch.
 
