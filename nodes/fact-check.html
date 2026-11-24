@@ -1,0 +1,55 @@
+<script type="text/javascript">
+RED.nodes.registerType("context-weave-fact-check", {
+  "category": "context weave",
+  "defaults": {
+    "name": {
+      "value": ""
+    },
+    "generationProfile": {
+      "value": "",
+      "type": "context-weave-model-profile",
+      "required": false
+    },
+    "evidenceSource": {
+      "value": "contextWeave.evidence"
+    },
+    "maxEvidenceChunks": {
+      "value": 8
+    },
+    "maxEvidenceChars": {
+      "value": 24000
+    }
+  },
+  "color": "#A78BFA",
+  "inputs": 1,
+  "outputs": 2,
+  "outputLabels": [
+    "success",
+    "error"
+  ],
+  "icon": "font-awesome/fa-check-circle",
+  paletteLabel: function () { return "fact-check"; },
+  label: function () { return this.name || "fact-check"; },
+  oneditprepare: function () {
+
+  },
+  oneditsave: function () {
+    this.maxEvidenceChunks = Number($('#node-input-maxEvidenceChunks').val()); $('#node-input-maxEvidenceChunks').remove();
+    this.maxEvidenceChars = Number($('#node-input-maxEvidenceChars').val()); $('#node-input-maxEvidenceChars').remove();
+  }
+});
+</script>
+
+<script type="text/html" data-template-name="context-weave-fact-check">
+  <div class="form-row" data-field="name"><label for="node-input-name" title="Optional label shown on the flow.">name</label><input id="node-input-name" type="text"></div>
+  <div class="form-row" data-field="generationProfile"><label for="node-input-generationProfile" title="Generation model profile used by this node.">generation profile</label><input type="text" id="node-input-generationProfile"></div>
+  <div class="form-row" data-field="evidenceSource"><label for="node-input-evidenceSource" title="Message path or typed value read at runtime.">evidence source</label><input id="node-input-evidenceSource" type="text"></div>
+  <div class="form-row" data-field="maxEvidenceChunks"><label for="node-input-maxEvidenceChunks" title="Maximum evidence chunks sent to a model.">max evidence chunks</label><input id="node-input-maxEvidenceChunks" type="number" step="any"></div>
+  <div class="form-row" data-field="maxEvidenceChars"><label for="node-input-maxEvidenceChars" title="Maximum total evidence characters sent to a model.">max evidence chars</label><input id="node-input-maxEvidenceChars" type="number" step="any"></div>
+</script>
+
+<script type="text/html" data-help-name="context-weave-fact-check">
+  <p>Optional second-pass entailment/provider check. Never call a generated score “truth”.</p>
+  <p><b>Input</b> answer + evidence</p>
+  <p><b>Output</b> support assessment</p>
+</script>

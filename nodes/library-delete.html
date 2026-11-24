@@ -1,0 +1,54 @@
+<script type="text/javascript">
+RED.nodes.registerType("context-weave-library-delete", {
+  "category": "context weave",
+  "defaults": {
+    "name": {
+      "value": ""
+    },
+    "library": {
+      "value": "",
+      "type": "context-weave-library",
+      "required": false
+    },
+    "confirmSource": {
+      "value": "contextWeave.confirm"
+    },
+    "confirmSourceType": {
+      "value": "msg"
+    },
+    "dryRun": {
+      "value": true
+    }
+  },
+  "color": "#78909C",
+  "inputs": 1,
+  "outputs": 2,
+  "outputLabels": [
+    "success",
+    "error"
+  ],
+  "icon": "font-awesome/fa-trash",
+  paletteLabel: function () { return "library-delete"; },
+  label: function () { return this.name || "library-delete"; },
+  oneditprepare: function () {
+
+  },
+  oneditsave: function () {
+
+  }
+});
+</script>
+
+<script type="text/html" data-template-name="context-weave-library-delete">
+  <div class="form-row" data-field="name"><label for="node-input-name" title="Optional label shown on the flow.">name</label><input id="node-input-name" type="text"></div>
+  <div class="form-row" data-field="library"><label for="node-input-library" title="Library configuration used by this operation.">library</label><input type="text" id="node-input-library"></div>
+  <div class="form-row" data-field="confirmSource"><label for="node-input-confirmSource" title="Message path or typed value read at runtime.">confirm source</label><input id="node-input-confirmSource" type="text"></div>
+  <div class="form-row" data-field="confirmSourceType"><label for="node-input-confirmSourceType" title="Node-RED typed-input kind used to evaluate the adjacent source value.">confirm source type</label><select id="node-input-confirmSourceType"><option value="msg">msg</option><option value="str">str</option><option value="flow">flow</option><option value="global">global</option><option value="env">env</option><option value="bool">bool</option><option value="num">num</option><option value="json">json</option></select></div>
+  <div class="form-row" data-field="dryRun"><label for="node-input-dryRun" title="Report the destructive action without applying it.">dry run</label><input id="node-input-dryRun" type="checkbox"></div>
+</script>
+
+<script type="text/html" data-help-name="context-weave-library-delete">
+  <p>Deletes config and all associated data. Disabled by default in runtime settings.</p>
+  <p><b>Input</b> library ID + `confirm: true`</p>
+  <p><b>Output</b> deletion receipt</p>
+</script>

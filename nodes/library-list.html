@@ -1,0 +1,59 @@
+<script type="text/javascript">
+RED.nodes.registerType("context-weave-library-list", {
+  "category": "context weave",
+  "defaults": {
+    "name": {
+      "value": ""
+    },
+    "library": {
+      "value": "",
+      "type": "context-weave-library",
+      "required": false
+    },
+    "libraries": {
+      "value": []
+    },
+    "pageSize": {
+      "value": 50
+    },
+    "cursorSource": {
+      "value": "contextWeave.cursor"
+    },
+    "cursorSourceType": {
+      "value": "msg"
+    }
+  },
+  "color": "#78909C",
+  "inputs": 1,
+  "outputs": 2,
+  "outputLabels": [
+    "success",
+    "error"
+  ],
+  "icon": "font-awesome/fa-list",
+  paletteLabel: function () { return "library-list"; },
+  label: function () { return this.name || "library-list"; },
+  oneditprepare: function () {
+    $('#node-input-libraries').val(JSON.stringify(this.libraries ?? [], null, 2));
+  },
+  oneditsave: function () {
+    this.libraries = JSON.parse($('#node-input-libraries').val()); $('#node-input-libraries').remove();
+    this.pageSize = Number($('#node-input-pageSize').val()); $('#node-input-pageSize').remove();
+  }
+});
+</script>
+
+<script type="text/html" data-template-name="context-weave-library-list">
+  <div class="form-row" data-field="name"><label for="node-input-name" title="Optional label shown on the flow.">name</label><input id="node-input-name" type="text"></div>
+  <div class="form-row" data-field="library"><label for="node-input-library" title="Library configuration used by this operation.">library</label><input type="text" id="node-input-library"></div>
+  <div class="form-row" data-field="libraries"><label for="node-input-libraries" title="Optional JSON list of weighted library targets.">libraries</label><textarea id="node-input-libraries" rows="3" style="width:70%"></textarea></div>
+  <div class="form-row" data-field="pageSize"><label for="node-input-pageSize" title="Maximum entries returned on one page.">page size</label><input id="node-input-pageSize" type="number" step="any"></div>
+  <div class="form-row" data-field="cursorSource"><label for="node-input-cursorSource" title="Message path or typed value read at runtime.">cursor source</label><input id="node-input-cursorSource" type="text"></div>
+  <div class="form-row" data-field="cursorSourceType"><label for="node-input-cursorSourceType" title="Node-RED typed-input kind used to evaluate the adjacent source value.">cursor source type</label><select id="node-input-cursorSourceType"><option value="msg">msg</option><option value="str">str</option><option value="flow">flow</option><option value="global">global</option><option value="env">env</option><option value="bool">bool</option><option value="num">num</option><option value="json">json</option></select></div>
+</script>
+
+<script type="text/html" data-help-name="context-weave-library-list">
+  <p>Lists only libraries allowed by configured server policy.</p>
+  <p><b>Input</b> filters/pagination</p>
+  <p><b>Output</b> `msg.contextWeave.libraries`</p>
+</script>

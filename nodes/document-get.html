@@ -1,0 +1,54 @@
+<script type="text/javascript">
+RED.nodes.registerType("context-weave-document-get", {
+  "category": "context weave",
+  "defaults": {
+    "name": {
+      "value": ""
+    },
+    "library": {
+      "value": "",
+      "type": "context-weave-library",
+      "required": false
+    },
+    "documentIdSource": {
+      "value": "contextWeave.documentId"
+    },
+    "documentIdSourceType": {
+      "value": "msg"
+    },
+    "includeChunks": {
+      "value": false
+    }
+  },
+  "color": "#F4A261",
+  "inputs": 1,
+  "outputs": 2,
+  "outputLabels": [
+    "success",
+    "error"
+  ],
+  "icon": "font-awesome/fa-file-text-o",
+  paletteLabel: function () { return "document-get"; },
+  label: function () { return this.name || "document-get"; },
+  oneditprepare: function () {
+
+  },
+  oneditsave: function () {
+
+  }
+});
+</script>
+
+<script type="text/html" data-template-name="context-weave-document-get">
+  <div class="form-row" data-field="name"><label for="node-input-name" title="Optional label shown on the flow.">name</label><input id="node-input-name" type="text"></div>
+  <div class="form-row" data-field="library"><label for="node-input-library" title="Library configuration used by this operation.">library</label><input type="text" id="node-input-library"></div>
+  <div class="form-row" data-field="documentIdSource"><label for="node-input-documentIdSource" title="Message path or typed value read at runtime.">document id source</label><input id="node-input-documentIdSource" type="text"></div>
+  <div class="form-row" data-field="documentIdSourceType"><label for="node-input-documentIdSourceType" title="Node-RED typed-input kind used to evaluate the adjacent source value.">document id source type</label><select id="node-input-documentIdSourceType"><option value="msg">msg</option><option value="str">str</option><option value="flow">flow</option><option value="global">global</option><option value="env">env</option><option value="bool">bool</option><option value="num">num</option><option value="json">json</option></select></div>
+  <div class="form-row" data-field="includeChunks"><label for="node-input-includeChunks" title="Include stored chunks with the returned document.">include chunks</label><input id="node-input-includeChunks" type="checkbox"></div>
+</script>
+
+<script type="text/html" data-help-name="context-weave-document-get">
+  <p>Retrieves source metadata and chunks only when policy allows it.</p>
+  <p><b>Input</b> document ID</p>
+  <p><b>Output</b> complete stored document</p>
+</script>

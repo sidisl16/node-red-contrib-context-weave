@@ -1,0 +1,54 @@
+<script type="text/javascript">
+RED.nodes.registerType("context-weave-conversation-turn", {
+  "category": "context weave",
+  "defaults": {
+    "name": {
+      "value": ""
+    },
+    "store": {
+      "value": "",
+      "type": "context-weave-conversation-store",
+      "required": false
+    },
+    "idSource": {
+      "value": "contextWeave.conversation.id"
+    },
+    "textSource": {
+      "value": ""
+    },
+    "role": {
+      "value": "user"
+    }
+  },
+  "color": "#2AA198",
+  "inputs": 1,
+  "outputs": 2,
+  "outputLabels": [
+    "success",
+    "error"
+  ],
+  "icon": "font-awesome/fa-paper-plane",
+  paletteLabel: function () { return "conversation-turn"; },
+  label: function () { return this.name || "conversation-turn"; },
+  oneditprepare: function () {
+
+  },
+  oneditsave: function () {
+
+  }
+});
+</script>
+
+<script type="text/html" data-template-name="context-weave-conversation-turn">
+  <div class="form-row" data-field="name"><label for="node-input-name" title="Optional label shown on the flow.">name</label><input id="node-input-name" type="text"></div>
+  <div class="form-row" data-field="store"><label for="node-input-store" title="Configuration value for store.">store</label><input type="text" id="node-input-store"></div>
+  <div class="form-row" data-field="idSource"><label for="node-input-idSource" title="Message path or typed value read at runtime.">id source</label><input id="node-input-idSource" type="text"></div>
+  <div class="form-row" data-field="textSource"><label for="node-input-textSource" title="Message path or typed value read at runtime.">text source</label><input id="node-input-textSource" type="text"></div>
+  <div class="form-row" data-field="role"><label for="node-input-role" title="Conversation turn role.">role</label><select id="node-input-role"><option value="user">user</option><option value="assistant">assistant</option></select></div>
+</script>
+
+<script type="text/html" data-help-name="context-weave-conversation-turn">
+  <p>Persists user/assistant turn only after model validation succeeds.</p>
+  <p><b>Input</b> conversation + user message</p>
+  <p><b>Output</b> appended turn</p>
+</script>

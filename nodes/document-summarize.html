@@ -1,0 +1,61 @@
+<script type="text/javascript">
+RED.nodes.registerType("context-weave-document-summarize", {
+  "category": "context weave",
+  "defaults": {
+    "name": {
+      "value": ""
+    },
+    "generationProfile": {
+      "value": "",
+      "type": "context-weave-model-profile",
+      "required": false
+    },
+    "streamMode": {
+      "value": "off"
+    },
+    "library": {
+      "value": "",
+      "type": "context-weave-library",
+      "required": false
+    },
+    "documentIdSource": {
+      "value": "contextWeave.documentId"
+    },
+    "instructions": {
+      "value": ""
+    }
+  },
+  "color": "#A78BFA",
+  "inputs": 1,
+  "outputs": 3,
+  "outputLabels": [
+    "event",
+    "complete",
+    "error"
+  ],
+  "icon": "font-awesome/fa-compress",
+  paletteLabel: function () { return "document-summarize"; },
+  label: function () { return this.name || "document-summarize"; },
+  oneditprepare: function () {
+
+  },
+  oneditsave: function () {
+
+  }
+});
+</script>
+
+<script type="text/html" data-template-name="context-weave-document-summarize">
+  <div class="form-row" data-field="name"><label for="node-input-name" title="Optional label shown on the flow.">name</label><input id="node-input-name" type="text"></div>
+  <div class="form-row" data-field="generationProfile"><label for="node-input-generationProfile" title="Generation model profile used by this node.">generation profile</label><input type="text" id="node-input-generationProfile"></div>
+  <div class="form-row" data-field="streamMode"><label for="node-input-streamMode" title="Whether progress is emitted on the event output.">stream mode</label><select id="node-input-streamMode"><option value="off">off</option><option value="events">events</option><option value="tokens">tokens</option></select></div>
+  <div class="form-row" data-field="library"><label for="node-input-library" title="Library configuration used by this operation.">library</label><input type="text" id="node-input-library"></div>
+  <div class="form-row" data-field="documentIdSource"><label for="node-input-documentIdSource" title="Message path or typed value read at runtime.">document id source</label><input id="node-input-documentIdSource" type="text"></div>
+  <div class="form-row" data-field="instructions"><label for="node-input-instructions" title="Additional trusted instructions appended to the built-in prompt.">instructions</label><input id="node-input-instructions" type="text"></div>
+</script>
+
+<script type="text/html" data-help-name="context-weave-document-summarize">
+  <p>Uses a generation provider with explicit template/model/limits. Supports normal and stream outputs.</p>
+  <p><b>Input</b> document ID or normalized document</p>
+  <p><b>Output</b> `msg.contextWeave.summary` + trace</p>
+</script>

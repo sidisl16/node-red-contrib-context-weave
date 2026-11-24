@@ -1,0 +1,106 @@
+<script type="text/javascript">
+RED.nodes.registerType("context-weave-answer", {
+  "category": "context weave",
+  "defaults": {
+    "name": {
+      "value": ""
+    },
+    "generationProfile": {
+      "value": "",
+      "type": "context-weave-model-profile",
+      "required": false
+    },
+    "streamMode": {
+      "value": "off"
+    },
+    "evidenceSource": {
+      "value": "contextWeave.evidence"
+    },
+    "maxEvidenceChunks": {
+      "value": 8
+    },
+    "maxEvidenceChars": {
+      "value": 24000
+    },
+    "querySource": {
+      "value": "contextWeave.query"
+    },
+    "instructions": {
+      "value": ""
+    },
+    "requireCitations": {
+      "value": true
+    },
+    "minimumCitations": {
+      "value": 1
+    },
+    "citationFormat": {
+      "value": "structured-and-numeric"
+    },
+    "noEvidenceText": {
+      "value": "I could not find evidence to answer this question."
+    },
+    "autoRetrieve": {
+      "value": false
+    },
+    "retrievalRecipe": {
+      "value": {}
+    }
+  },
+  "color": "#A78BFA",
+  "inputs": 1,
+  "outputs": 3,
+  "outputLabels": [
+    "event",
+    "complete",
+    "error"
+  ],
+  "icon": "font-awesome/fa-comment",
+  paletteLabel: function () { return "answer"; },
+  label: function () { return this.name || "answer"; },
+  oneditprepare: function () {
+    $('#node-input-retrievalRecipe').val(JSON.stringify(this.retrievalRecipe ?? {}, null, 2));
+    const visibilityRules = {"minimumCitations":{"field":"requireCitations","truthy":true},"retrievalRecipe":{"field":"autoRetrieve","truthy":true}};
+    const fieldValue = field => { const input = $('#node-input-' + field); return input.attr('type') === 'checkbox' ? input.prop('checked') : input.val(); };
+    const updateVisibility = () => {
+      Object.entries(visibilityRules).forEach(([field, rule]) => {
+        const value = fieldValue(rule.field);
+        const visible = rule.truthy ? value === true : rule.in ? rule.in.includes(value) : !rule.not.includes(value);
+        $('#node-input-' + field).closest('.form-row').toggle(visible);
+      });
+    };
+    $('#node-input-requireCitations').on('change.contextWeaveVisibility', updateVisibility);
+    $('#node-input-autoRetrieve').on('change.contextWeaveVisibility', updateVisibility);
+    updateVisibility();
+  },
+  oneditsave: function () {
+    this.retrievalRecipe = JSON.parse($('#node-input-retrievalRecipe').val()); $('#node-input-retrievalRecipe').remove();
+    this.maxEvidenceChunks = Number($('#node-input-maxEvidenceChunks').val()); $('#node-input-maxEvidenceChunks').remove();
+    this.maxEvidenceChars = Number($('#node-input-maxEvidenceChars').val()); $('#node-input-maxEvidenceChars').remove();
+    this.minimumCitations = Number($('#node-input-minimumCitations').val()); $('#node-input-minimumCitations').remove();
+  }
+});
+</script>
+
+<script type="text/html" data-template-name="context-weave-answer">
+  <div class="form-row" data-field="name"><label for="node-input-name" title="Optional label shown on the flow.">name</label><input id="node-input-name" type="text"></div>
+  <div class="form-row" data-field="generationProfile"><label for="node-input-generationProfile" title="Generation model profile used by this node.">generation profile</label><input type="text" id="node-input-generationProfile"></div>
+  <div class="form-row" data-field="streamMode"><label for="node-input-streamMode" title="Whether progress is emitted on the event output.">stream mode</label><select id="node-input-streamMode"><option value="off">off</option><option value="events">events</option><option value="tokens">tokens</option></select></div>
+  <div class="form-row" data-field="evidenceSource"><label for="node-input-evidenceSource" title="Message path or typed value read at runtime.">evidence source</label><input id="node-input-evidenceSource" type="text"></div>
+  <div class="form-row" data-field="maxEvidenceChunks"><label for="node-input-maxEvidenceChunks" title="Maximum evidence chunks sent to a model.">max evidence chunks</label><input id="node-input-maxEvidenceChunks" type="number" step="any"></div>
+  <div class="form-row" data-field="maxEvidenceChars"><label for="node-input-maxEvidenceChars" title="Maximum total evidence characters sent to a model.">max evidence chars</label><input id="node-input-maxEvidenceChars" type="number" step="any"></div>
+  <div class="form-row" data-field="querySource"><label for="node-input-querySource" title="Message path or typed value read at runtime.">query source</label><input id="node-input-querySource" type="text"></div>
+  <div class="form-row" data-field="instructions"><label for="node-input-instructions" title="Additional trusted instructions appended to the built-in prompt.">instructions</label><input id="node-input-instructions" type="text"></div>
+  <div class="form-row" data-field="requireCitations"><label for="node-input-requireCitations" title="Reject an evidence-backed answer without valid citations.">require citations</label><input id="node-input-requireCitations" type="checkbox"></div>
+  <div class="form-row" data-field="minimumCitations"><label for="node-input-minimumCitations" title="Minimum valid evidence citations required.">minimum citations</label><input id="node-input-minimumCitations" type="number" step="any"></div>
+  <div class="form-row" data-field="citationFormat"><label for="node-input-citationFormat" title="How validated citation markers are rendered.">citation format</label><select id="node-input-citationFormat"><option value="structured-and-numeric">structured-and-numeric</option><option value="markdown">markdown</option><option value="html">html</option></select></div>
+  <div class="form-row" data-field="noEvidenceText"><label for="node-input-noEvidenceText" title="Safe response returned when retrieval produces no evidence.">no evidence text</label><input id="node-input-noEvidenceText" type="text"></div>
+  <div class="form-row" data-field="autoRetrieve"><label for="node-input-autoRetrieve" title="Run retrieval inside the answer node before generation.">auto retrieve</label><input id="node-input-autoRetrieve" type="checkbox"></div>
+  <div class="form-row" data-field="retrievalRecipe"><label for="node-input-retrievalRecipe" title="JSON options passed to the internal retrieve operation.">retrieval recipe</label><textarea id="node-input-retrievalRecipe" rows="3" style="width:70%"></textarea></div>
+</script>
+
+<script type="text/html" data-help-name="context-weave-answer">
+  <p>Grounded answer from evidence only by default. Combines retrieve+rerank only when “retrieve automatically” is enabled.</p>
+  <p><b>Input</b> query + evidence</p>
+  <p><b>Output</b> answer, citations, trace</p>
+</script>

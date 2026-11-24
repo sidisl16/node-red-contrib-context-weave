@@ -1,0 +1,46 @@
+<script type="text/javascript">
+RED.nodes.registerType("context-weave-conversation-read", {
+  "category": "context weave",
+  "defaults": {
+    "name": {
+      "value": ""
+    },
+    "store": {
+      "value": "",
+      "type": "context-weave-conversation-store",
+      "required": false
+    },
+    "idSource": {
+      "value": "contextWeave.conversation.id"
+    }
+  },
+  "color": "#2AA198",
+  "inputs": 1,
+  "outputs": 2,
+  "outputLabels": [
+    "success",
+    "error"
+  ],
+  "icon": "font-awesome/fa-book",
+  paletteLabel: function () { return "conversation-read"; },
+  label: function () { return this.name || "conversation-read"; },
+  oneditprepare: function () {
+
+  },
+  oneditsave: function () {
+
+  }
+});
+</script>
+
+<script type="text/html" data-template-name="context-weave-conversation-read">
+  <div class="form-row" data-field="name"><label for="node-input-name" title="Optional label shown on the flow.">name</label><input id="node-input-name" type="text"></div>
+  <div class="form-row" data-field="store"><label for="node-input-store" title="Configuration value for store.">store</label><input type="text" id="node-input-store"></div>
+  <div class="form-row" data-field="idSource"><label for="node-input-idSource" title="Message path or typed value read at runtime.">id source</label><input id="node-input-idSource" type="text"></div>
+</script>
+
+<script type="text/html" data-help-name="context-weave-conversation-read">
+  <p>Returns policy-permitted turns only.</p>
+  <p><b>Input</b> ID</p>
+  <p><b>Output</b> bounded history</p>
+</script>

@@ -1,0 +1,78 @@
+<script type="text/javascript">
+RED.nodes.registerType("context-weave-parse-content", {
+  "category": "context weave",
+  "defaults": {
+    "name": {
+      "value": ""
+    },
+    "parserRoute": {
+      "value": "auto"
+    },
+    "extractor": {
+      "value": "",
+      "type": "context-weave-provider",
+      "required": false
+    },
+    "maxFileMb": {
+      "value": 10
+    },
+    "timeoutSeconds": {
+      "value": 60
+    },
+    "sourceEnvelope": {
+      "value": "contextWeave.source"
+    },
+    "sourceEnvelopeType": {
+      "value": "msg"
+    },
+    "outputProperty": {
+      "value": "contextWeave.input.document"
+    }
+  },
+  "color": "#F4A261",
+  "inputs": 1,
+  "outputs": 3,
+  "outputLabels": [
+    "parsed",
+    "custom parser",
+    "error"
+  ],
+  "icon": "font-awesome/fa-file-text-o",
+  paletteLabel: function () { return "parse-content"; },
+  label: function () { return this.name || "parse-content"; },
+  oneditprepare: function () {
+    const visibilityRules = {"extractor":{"field":"parserRoute","in":["auto","remote"]},"timeoutSeconds":{"field":"parserRoute","in":["auto","remote"]}};
+    const fieldValue = field => { const input = $('#node-input-' + field); return input.attr('type') === 'checkbox' ? input.prop('checked') : input.val(); };
+    const updateVisibility = () => {
+      Object.entries(visibilityRules).forEach(([field, rule]) => {
+        const value = fieldValue(rule.field);
+        const visible = rule.truthy ? value === true : rule.in ? rule.in.includes(value) : !rule.not.includes(value);
+        $('#node-input-' + field).closest('.form-row').toggle(visible);
+      });
+    };
+    $('#node-input-parserRoute').on('change.contextWeaveVisibility', updateVisibility);
+    updateVisibility();
+  },
+  oneditsave: function () {
+    this.maxFileMb = Number($('#node-input-maxFileMb').val()); $('#node-input-maxFileMb').remove();
+    this.timeoutSeconds = Number($('#node-input-timeoutSeconds').val()); $('#node-input-timeoutSeconds').remove();
+  }
+});
+</script>
+
+<script type="text/html" data-template-name="context-weave-parse-content">
+  <div class="form-row" data-field="name"><label for="node-input-name" title="Optional label shown on the flow.">name</label><input id="node-input-name" type="text"></div>
+  <div class="form-row" data-field="parserRoute"><label for="node-input-parserRoute" title="Parser selection: automatic, built-in text, remote Tika, or a custom branch.">parser route</label><select id="node-input-parserRoute"><option value="auto">auto</option><option value="built-in">built-in</option><option value="remote">remote</option><option value="custom">custom</option></select></div>
+  <div class="form-row" data-field="extractor"><label for="node-input-extractor" title="Tika provider used for remote extraction.">extractor</label><input type="text" id="node-input-extractor"></div>
+  <div class="form-row" data-field="maxFileMb"><label for="node-input-maxFileMb" title="Maximum accepted source file size in MiB.">max file mb</label><input id="node-input-maxFileMb" type="number" step="any"></div>
+  <div class="form-row" data-field="timeoutSeconds"><label for="node-input-timeoutSeconds" title="Maximum extraction or agent duration in seconds.">timeout seconds</label><input id="node-input-timeoutSeconds" type="number" step="any"></div>
+  <div class="form-row" data-field="sourceEnvelope"><label for="node-input-sourceEnvelope" title="Property containing the normalized source envelope.">source envelope</label><input id="node-input-sourceEnvelope" type="text"></div>
+  <div class="form-row" data-field="sourceEnvelopeType"><label for="node-input-sourceEnvelopeType" title="Configuration value for source envelope type.">source envelope type</label><select id="node-input-sourceEnvelopeType"><option value="msg">msg</option><option value="str">str</option><option value="flow">flow</option><option value="global">global</option><option value="env">env</option><option value="bool">bool</option><option value="num">num</option><option value="json">json</option></select></div>
+  <div class="form-row" data-field="outputProperty"><label for="node-input-outputProperty" title="Message property where this node writes its main result.">output property</label><input id="node-input-outputProperty" type="text"></div>
+</script>
+
+<script type="text/html" data-help-name="context-weave-parse-content">
+  <p>Extracts text, tables, page/section locators, and parser warnings through the chosen parser route.</p>
+  <p><b>Input</b> normalized source envelope containing a file, HTML, Markdown, or text</p>
+  <p><b>Output</b> parsed document/sections</p>
+</script>

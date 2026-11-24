@@ -1,0 +1,75 @@
+<script type="text/javascript">
+RED.nodes.registerType("context-weave-split", {
+  "category": "context weave",
+  "defaults": {
+    "name": {
+      "value": ""
+    },
+    "documentSource": {
+      "value": ""
+    },
+    "documentSourceType": {
+      "value": "msg"
+    },
+    "strategy": {
+      "value": "sentence-window"
+    },
+    "targetTokens": {
+      "value": 800
+    },
+    "overlapTokens": {
+      "value": 120
+    },
+    "customRegex": {
+      "value": ""
+    },
+    "outputProperty": {
+      "value": "contextWeave.input.chunks"
+    }
+  },
+  "color": "#F4A261",
+  "inputs": 1,
+  "outputs": 2,
+  "outputLabels": [
+    "success",
+    "error"
+  ],
+  "icon": "font-awesome/fa-scissors",
+  paletteLabel: function () { return "split"; },
+  label: function () { return this.name || "split"; },
+  oneditprepare: function () {
+    const visibilityRules = {"customRegex":{"field":"strategy","in":["custom-regex"]}};
+    const fieldValue = field => { const input = $('#node-input-' + field); return input.attr('type') === 'checkbox' ? input.prop('checked') : input.val(); };
+    const updateVisibility = () => {
+      Object.entries(visibilityRules).forEach(([field, rule]) => {
+        const value = fieldValue(rule.field);
+        const visible = rule.truthy ? value === true : rule.in ? rule.in.includes(value) : !rule.not.includes(value);
+        $('#node-input-' + field).closest('.form-row').toggle(visible);
+      });
+    };
+    $('#node-input-strategy').on('change.contextWeaveVisibility', updateVisibility);
+    updateVisibility();
+  },
+  oneditsave: function () {
+    this.targetTokens = Number($('#node-input-targetTokens').val()); $('#node-input-targetTokens').remove();
+    this.overlapTokens = Number($('#node-input-overlapTokens').val()); $('#node-input-overlapTokens').remove();
+  }
+});
+</script>
+
+<script type="text/html" data-template-name="context-weave-split">
+  <div class="form-row" data-field="name"><label for="node-input-name" title="Optional label shown on the flow.">name</label><input id="node-input-name" type="text"></div>
+  <div class="form-row" data-field="documentSource"><label for="node-input-documentSource" title="Message path or typed value read at runtime.">document source</label><input id="node-input-documentSource" type="text"></div>
+  <div class="form-row" data-field="documentSourceType"><label for="node-input-documentSourceType" title="Node-RED typed-input kind used to evaluate the adjacent source value.">document source type</label><select id="node-input-documentSourceType"><option value="msg">msg</option><option value="str">str</option><option value="flow">flow</option><option value="global">global</option><option value="env">env</option><option value="bool">bool</option><option value="num">num</option><option value="json">json</option></select></div>
+  <div class="form-row" data-field="strategy"><label for="node-input-strategy" title="Algorithm used by this node.">strategy</label><select id="node-input-strategy"><option value="sentence-window">sentence-window</option><option value="token-window">token-window</option><option value="paragraph">paragraph</option><option value="section">section</option><option value="markdown-headings">markdown-headings</option><option value="custom-regex">custom-regex</option></select></div>
+  <div class="form-row" data-field="targetTokens"><label for="node-input-targetTokens" title="Approximate target chunk size.">target tokens</label><input id="node-input-targetTokens" type="number" step="any"></div>
+  <div class="form-row" data-field="overlapTokens"><label for="node-input-overlapTokens" title="Approximate overlap between adjacent chunks.">overlap tokens</label><input id="node-input-overlapTokens" type="number" step="any"></div>
+  <div class="form-row" data-field="customRegex"><label for="node-input-customRegex" title="Regular expression used as a chunk boundary.">custom regex</label><input id="node-input-customRegex" type="text"></div>
+  <div class="form-row" data-field="outputProperty"><label for="node-input-outputProperty" title="Message property where this node writes its main result.">output property</label><input id="node-input-outputProperty" type="text"></div>
+</script>
+
+<script type="text/html" data-help-name="context-weave-split">
+  <p>Deterministic splitter. Modes: sentence-window, token-window, paragraph, section, markdown headings, custom regex. Never span a section boundary by default. Persist splitter version/config.</p>
+  <p><b>Input</b> normalized document</p>
+  <p><b>Output</b> document plus chunks</p>
+</script>

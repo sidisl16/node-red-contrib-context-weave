@@ -1,0 +1,567 @@
+[
+  {
+    "id": "cw-tab-support-rag",
+    "type": "tab",
+    "label": "ContextWeave — Support RAG API",
+    "disabled": false,
+    "info": "Indexes support articles and exposes POST /context-weave/ask. Install node-red-contrib-context-weave before importing."
+  },
+  {
+    "id": "cw-provider-local",
+    "type": "context-weave-provider",
+    "name": "Local Ollama",
+    "adapter": "ollama",
+    "baseUrl": "http://localhost:11434",
+    "timeoutMs": 60000,
+    "retryPolicy": "default",
+    "credentials": {}
+  },
+  {
+    "id": "cw-embed-profile",
+    "type": "context-weave-model-profile",
+    "name": "local-embeddings",
+    "provider": "cw-provider-local",
+    "purpose": "embedding",
+    "model": "nomic-embed-text",
+    "batchSize": 32,
+    "normalization": "l2",
+    "privacy": "local-only"
+  },
+  {
+    "id": "cw-answer-profile",
+    "type": "context-weave-model-profile",
+    "name": "fast-grounded-answer",
+    "provider": "cw-provider-local",
+    "purpose": "generation",
+    "model": "llama3.2",
+    "temperature": 0.2,
+    "maxOutputTokens": 900,
+    "maxContextChars": 24000,
+    "privacy": "local-only"
+  },
+  {
+    "id": "cw-support-library",
+    "type": "context-weave-library",
+    "name": "Support knowledge base",
+    "libraryId": "support-kb",
+    "embeddingProfile": "cw-embed-profile",
+    "chunking": {
+      "strategy": "sentence-window",
+      "targetTokens": 800,
+      "overlapTokens": 120,
+      "preserveSections": true
+    },
+    "filterAttributes": [
+      {
+        "name": "tenant_id",
+        "type": "string",
+        "required": true
+      },
+      {
+        "name": "status",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "product",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "accessPolicy": {
+      "mode": "tenant-field",
+      "metadataField": "tenant_id",
+      "claimProperty": "auth.tenantId"
+    },
+    "privacy": "local-only"
+  },
+  {
+    "id": "cw-comment-index",
+    "type": "comment",
+    "z": "cw-tab-support-rag",
+    "name": "Ingest: send a structured article to index it",
+    "info": "Replace the Inject node with a webhook, database, or file source in production.",
+    "x": 180,
+    "y": 100,
+    "wires": []
+  },
+  {
+    "id": "cw-inject-article",
+    "type": "inject",
+    "z": "cw-tab-support-rag",
+    "name": "Index sample password-reset article",
+    "props": [
+      {
+        "p": "payload"
+      },
+      {
+        "p": "auth",
+        "v": "{\"tenantId\":\"acme\"}",
+        "vt": "json"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "",
+    "payload": "{\"id\":\"help-password-reset-v1\",\"title\":\"Reset a password\",\"text\":\"To reset your password, select Forgot password on the sign-in page. We send a reset link to your verified email address. The link expires after 30 minutes.\",\"uri\":\"https://docs.example.test/help/password-reset\",\"metadata\":{\"tenant_id\":\"acme\",\"status\":\"published\",\"product\":\"web\"}}",
+    "payloadType": "json",
+    "x": 190,
+    "y": 160,
+    "wires": [
+      [
+        "cw-source-map"
+      ]
+    ]
+  },
+  {
+    "id": "cw-source-map",
+    "type": "context-weave-source-map",
+    "z": "cw-tab-support-rag",
+    "name": "Map connector record",
+    "sourceSystem": "demo-support-docs",
+    "itemIdSource": "payload.id",
+    "itemIdSourceType": "msg",
+    "uriSource": "payload.uri",
+    "uriSourceType": "msg",
+    "contentSource": "payload",
+    "contentSourceType": "msg",
+    "contentKind": "record",
+    "metadataSource": "payload.metadata",
+    "metadataSourceType": "msg",
+    "operation": "upsert",
+    "x": 440,
+    "y": 160,
+    "wires": [
+      [
+        "cw-parse-content"
+      ],
+      [
+        "cw-document-delete"
+      ],
+      [
+        "cw-debug-index-error"
+      ]
+    ]
+  },
+  {
+    "id": "cw-parse-content",
+    "type": "context-weave-parse-content",
+    "z": "cw-tab-support-rag",
+    "name": "Parse source record",
+    "sourceEnvelope": "contextWeave.source",
+    "sourceEnvelopeType": "msg",
+    "parserRoute": "auto",
+    "extractText": true,
+    "extractTables": true,
+    "extractImages": false,
+    "maxFileMb": 10,
+    "timeoutSeconds": 60,
+    "outputProperty": "contextWeave.input.document",
+    "x": 655,
+    "y": 160,
+    "wires": [
+      [
+        "cw-record-ingest"
+      ],
+      [],
+      [
+        "cw-debug-index-error"
+      ]
+    ]
+  },
+  {
+    "id": "cw-record-ingest",
+    "type": "context-weave-record-ingest",
+    "z": "cw-tab-support-rag",
+    "name": "Normalize support article",
+    "library": "cw-support-library",
+    "documentSource": "contextWeave.input.document",
+    "documentSourceType": "msg",
+    "idPath": "id",
+    "titlePath": "title",
+    "textPath": "text",
+    "metadataPath": "metadata",
+    "validationMode": "strict",
+    "x": 875,
+    "y": 160,
+    "wires": [
+      [
+        "cw-split-article"
+      ],
+      [
+        "cw-debug-index-error"
+      ]
+    ]
+  },
+  {
+    "id": "cw-split-article",
+    "type": "context-weave-split",
+    "z": "cw-tab-support-rag",
+    "name": "Split into evidence chunks",
+    "documentSource": "contextWeave.input.document",
+    "documentSourceType": "msg",
+    "strategy": "sentence-window",
+    "targetTokens": 800,
+    "overlapTokens": 120,
+    "preserveSections": true,
+    "outputProperty": "contextWeave.input.chunks",
+    "x": 1100,
+    "y": 160,
+    "wires": [
+      [
+        "cw-index-article"
+      ],
+      [
+        "cw-debug-index-error"
+      ]
+    ]
+  },
+  {
+    "id": "cw-index-article",
+    "type": "context-weave-index",
+    "z": "cw-tab-support-rag",
+    "name": "Upsert support article",
+    "library": "cw-support-library",
+    "documentSource": "contextWeave.input.document",
+    "documentSourceType": "msg",
+    "chunksSource": "contextWeave.input.chunks",
+    "chunksSourceType": "msg",
+    "mode": "upsert",
+    "x": 1320,
+    "y": 160,
+    "wires": [
+      [
+        "cw-debug-index-ok"
+      ],
+      [
+        "cw-debug-index-error"
+      ]
+    ]
+  },
+  {
+    "id": "cw-debug-index-ok",
+    "type": "debug",
+    "z": "cw-tab-support-rag",
+    "name": "Index result",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "contextWeave.index",
+    "targetType": "msg",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 1510,
+    "y": 140,
+    "wires": []
+  },
+  {
+    "id": "cw-debug-index-error",
+    "type": "debug",
+    "z": "cw-tab-support-rag",
+    "name": "Index error",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": true,
+    "complete": "error",
+    "targetType": "msg",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 1300,
+    "y": 220,
+    "wires": []
+  },
+  {
+    "id": "cw-document-delete",
+    "type": "context-weave-document-delete",
+    "z": "cw-tab-support-rag",
+    "name": "Delete removed source item",
+    "library": "cw-support-library",
+    "documentIdSource": "contextWeave.source.documentId",
+    "documentIdSourceType": "msg",
+    "confirmSource": "contextWeave.source.deleteConfirmed",
+    "confirmSourceType": "msg",
+    "dryRun": false,
+    "x": 715,
+    "y": 220,
+    "wires": [
+      [
+        "cw-debug-index-ok"
+      ],
+      [
+        "cw-debug-index-error"
+      ]
+    ]
+  },
+  {
+    "id": "cw-comment-query",
+    "type": "comment",
+    "z": "cw-tab-support-rag",
+    "name": "Ask: POST /context-weave/ask with { question: \"...\" }",
+    "info": "The HTTP gateway/auth layer must inject msg.auth.tenantId from a trusted identity, not from the request body.",
+    "x": 225,
+    "y": 320,
+    "wires": []
+  },
+  {
+    "id": "cw-http-in-ask",
+    "type": "http in",
+    "z": "cw-tab-support-rag",
+    "name": "Ask support KB",
+    "url": "/context-weave/ask",
+    "method": "post",
+    "upload": false,
+    "swaggerDoc": "",
+    "x": 165,
+    "y": 380,
+    "wires": [
+      [
+        "cw-validate-question"
+      ]
+    ]
+  },
+  {
+    "id": "cw-validate-question",
+    "type": "function",
+    "z": "cw-tab-support-rag",
+    "name": "Validate question and trusted identity",
+    "func": "const question = msg.payload?.question;\nif (typeof question !== 'string' || !question.trim()) {\n  msg.statusCode = 400;\n  msg.payload = { error: 'question must be a non-empty string' };\n  return [null, msg];\n}\nif (!msg.auth?.tenantId) {\n  msg.statusCode = 401;\n  msg.payload = {error:'Trusted identity required'};\n  return [null,msg];\n}\nmsg.contextWeave = msg.contextWeave || {};\nmsg.contextWeave.query = question.trim();\nreturn [msg, null];",
+    "outputs": 2,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 415,
+    "y": 380,
+    "wires": [
+      [
+        "cw-retrieve"
+      ],
+      [
+        "cw-http-response"
+      ]
+    ]
+  },
+  {
+    "id": "cw-retrieve",
+    "type": "context-weave-retrieve",
+    "z": "cw-tab-support-rag",
+    "name": "Hybrid retrieval",
+    "libraries": [
+      {
+        "library": "cw-support-library",
+        "metadataFilter": "status = 'published'",
+        "lexicalWeight": 0.05
+      }
+    ],
+    "querySource": "contextWeave.query",
+    "querySourceType": "msg",
+    "mode": "hybrid",
+    "candidateLimit": 25,
+    "resultLimit": 8,
+    "contextMode": "sentences",
+    "sentencesBefore": 1,
+    "sentencesAfter": 1,
+    "highlights": true,
+    "securityContextSource": "auth",
+    "securityContextSourceType": "msg",
+    "x": 650,
+    "y": 380,
+    "wires": [
+      [
+        "cw-rerank"
+      ],
+      [
+        "cw-api-error"
+      ]
+    ]
+  },
+  {
+    "id": "cw-rerank",
+    "type": "context-weave-rerank",
+    "z": "cw-tab-support-rag",
+    "name": "Diversify evidence",
+    "querySource": "contextWeave.query",
+    "querySourceType": "msg",
+    "evidenceSource": "contextWeave.evidence",
+    "evidenceSourceType": "msg",
+    "strategy": "mmr",
+    "diversityBias": 0.3,
+    "limit": 6,
+    "x": 865,
+    "y": 380,
+    "wires": [
+      [
+        "cw-answer"
+      ],
+      [
+        "cw-api-error"
+      ]
+    ]
+  },
+  {
+    "id": "cw-answer",
+    "type": "context-weave-answer",
+    "z": "cw-tab-support-rag",
+    "name": "Answer with citations",
+    "generationProfile": "cw-answer-profile",
+    "querySource": "contextWeave.query",
+    "querySourceType": "msg",
+    "evidenceSource": "contextWeave.evidence",
+    "evidenceSourceType": "msg",
+    "maxEvidenceChunks": 6,
+    "maxEvidenceChars": 18000,
+    "instructions": "Answer only from the supplied evidence. Cite each factual claim using the supplied evidence references. If the evidence is insufficient, say that you do not know.",
+    "citationFormat": "structured-and-numeric",
+    "requireCitations": true,
+    "noEvidenceBehavior": "say-unknown",
+    "streamMode": "off",
+    "x": 1080,
+    "y": 380,
+    "wires": [
+      [],
+      [
+        "cw-format-response"
+      ],
+      [
+        "cw-api-error"
+      ]
+    ]
+  },
+  {
+    "id": "cw-format-response",
+    "type": "change",
+    "z": "cw-tab-support-rag",
+    "name": "Return answer + citations",
+    "rules": [
+      {
+        "t": "set",
+        "p": "payload",
+        "pt": "msg",
+        "to": "{\"answer\":contextWeave.answer.text,\"citations\":contextWeave.answer.citations,\"requestId\":contextWeave.requestId}",
+        "tot": "jsonata"
+      }
+    ],
+    "action": "",
+    "property": "",
+    "from": "",
+    "to": "",
+    "reg": false,
+    "x": 1295,
+    "y": 380,
+    "wires": [
+      [
+        "cw-response-route"
+      ]
+    ]
+  },
+  {
+    "id": "cw-api-error",
+    "type": "function",
+    "z": "cw-tab-support-rag",
+    "name": "Return safe API error",
+    "func": "const detail = msg.error || msg.contextWeave?.error || {};\nmsg.statusCode = detail.code === 'NOT_FOUND' ? 404 : detail.code === 'VALIDATION' ? 400 : detail.code === 'RATE_LIMITED' ? 429 : 502;\nmsg.payload = { error: detail.code || 'RAG_ERROR', message: detail.message || 'The knowledge service could not complete the request.', requestId: msg.contextWeave?.requestId };\nreturn msg;",
+    "outputs": 1,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 1110,
+    "y": 450,
+    "wires": [
+      [
+        "cw-http-response"
+      ]
+    ]
+  },
+  {
+    "id": "cw-http-response",
+    "type": "http response",
+    "z": "cw-tab-support-rag",
+    "name": "",
+    "statusCode": "",
+    "headers": {},
+    "x": 1700,
+    "y": 420,
+    "wires": []
+  },
+  {
+    "id": "cw-demo-question",
+    "type": "inject",
+    "z": "cw-tab-support-rag",
+    "name": "Ask about password reset",
+    "props": [
+      {
+        "p": "payload"
+      },
+      {
+        "p": "auth",
+        "v": "{\"tenantId\":\"acme\"}",
+        "vt": "json"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "",
+    "payload": "{\"question\":\"When does the reset link expire?\"}",
+    "payloadType": "json",
+    "x": 170,
+    "y": 460,
+    "wires": [
+      [
+        "cw-validate-question"
+      ]
+    ]
+  },
+  {
+    "id": "cw-debug-answer",
+    "type": "debug",
+    "z": "cw-tab-support-rag",
+    "name": "Answer and citations",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "payload",
+    "targetType": "msg",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 1520,
+    "y": 330,
+    "wires": []
+  },
+  {
+    "id": "cw-response-route",
+    "type": "switch",
+    "z": "cw-tab-support-rag",
+    "name": "HTTP or Inject?",
+    "property": "res",
+    "propertyType": "msg",
+    "rules": [
+      {
+        "t": "nnull"
+      },
+      {
+        "t": "else"
+      }
+    ],
+    "outputs": 2,
+    "x": 1490,
+    "y": 380,
+    "wires": [
+      [
+        "cw-http-response"
+      ],
+      [
+        "cw-debug-answer"
+      ]
+    ]
+  }
+]

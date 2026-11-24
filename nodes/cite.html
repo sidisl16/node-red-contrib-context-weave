@@ -1,0 +1,66 @@
+<script type="text/javascript">
+RED.nodes.registerType("context-weave-cite", {
+  "category": "context weave",
+  "defaults": {
+    "name": {
+      "value": ""
+    },
+    "answerSource": {
+      "value": ""
+    },
+    "evidenceSource": {
+      "value": "contextWeave.evidence"
+    },
+    "citationFormat": {
+      "value": "structured-and-numeric"
+    },
+    "requireCitations": {
+      "value": true
+    },
+    "minimumCitations": {
+      "value": 1
+    }
+  },
+  "color": "#A78BFA",
+  "inputs": 1,
+  "outputs": 2,
+  "outputLabels": [
+    "success",
+    "error"
+  ],
+  "icon": "font-awesome/fa-quote-right",
+  paletteLabel: function () { return "cite"; },
+  label: function () { return this.name || "cite"; },
+  oneditprepare: function () {
+    const visibilityRules = {"minimumCitations":{"field":"requireCitations","truthy":true}};
+    const fieldValue = field => { const input = $('#node-input-' + field); return input.attr('type') === 'checkbox' ? input.prop('checked') : input.val(); };
+    const updateVisibility = () => {
+      Object.entries(visibilityRules).forEach(([field, rule]) => {
+        const value = fieldValue(rule.field);
+        const visible = rule.truthy ? value === true : rule.in ? rule.in.includes(value) : !rule.not.includes(value);
+        $('#node-input-' + field).closest('.form-row').toggle(visible);
+      });
+    };
+    $('#node-input-requireCitations').on('change.contextWeaveVisibility', updateVisibility);
+    updateVisibility();
+  },
+  oneditsave: function () {
+    this.minimumCitations = Number($('#node-input-minimumCitations').val()); $('#node-input-minimumCitations').remove();
+  }
+});
+</script>
+
+<script type="text/html" data-template-name="context-weave-cite">
+  <div class="form-row" data-field="name"><label for="node-input-name" title="Optional label shown on the flow.">name</label><input id="node-input-name" type="text"></div>
+  <div class="form-row" data-field="answerSource"><label for="node-input-answerSource" title="Message path or typed value read at runtime.">answer source</label><input id="node-input-answerSource" type="text"></div>
+  <div class="form-row" data-field="evidenceSource"><label for="node-input-evidenceSource" title="Message path or typed value read at runtime.">evidence source</label><input id="node-input-evidenceSource" type="text"></div>
+  <div class="form-row" data-field="citationFormat"><label for="node-input-citationFormat" title="How validated citation markers are rendered.">citation format</label><select id="node-input-citationFormat"><option value="structured-and-numeric">structured-and-numeric</option><option value="markdown">markdown</option><option value="html">html</option></select></div>
+  <div class="form-row" data-field="requireCitations"><label for="node-input-requireCitations" title="Reject an evidence-backed answer without valid citations.">require citations</label><input id="node-input-requireCitations" type="checkbox"></div>
+  <div class="form-row" data-field="minimumCitations"><label for="node-input-minimumCitations" title="Minimum valid evidence citations required.">minimum citations</label><input id="node-input-minimumCitations" type="number" step="any"></div>
+</script>
+
+<script type="text/html" data-help-name="context-weave-cite">
+  <p>Validates/normalizes citations and can render `numeric`, `markdown`, or `html` forms.</p>
+  <p><b>Input</b> answer with `[E:id]` markers + evidence</p>
+  <p><b>Output</b> normalized citation list/rendering</p>
+</script>

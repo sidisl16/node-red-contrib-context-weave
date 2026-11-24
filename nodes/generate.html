@@ -1,0 +1,64 @@
+<script type="text/javascript">
+RED.nodes.registerType("context-weave-generate", {
+  "category": "context weave",
+  "defaults": {
+    "name": {
+      "value": ""
+    },
+    "generationProfile": {
+      "value": "",
+      "type": "context-weave-model-profile",
+      "required": false
+    },
+    "streamMode": {
+      "value": "off"
+    },
+    "evidenceSource": {
+      "value": "contextWeave.evidence"
+    },
+    "maxEvidenceChunks": {
+      "value": 8
+    },
+    "maxEvidenceChars": {
+      "value": 24000
+    },
+    "messagesSource": {
+      "value": "payload"
+    }
+  },
+  "color": "#A78BFA",
+  "inputs": 1,
+  "outputs": 3,
+  "outputLabels": [
+    "event",
+    "complete",
+    "error"
+  ],
+  "icon": "font-awesome/fa-magic",
+  paletteLabel: function () { return "generate"; },
+  label: function () { return this.name || "generate"; },
+  oneditprepare: function () {
+
+  },
+  oneditsave: function () {
+    this.maxEvidenceChunks = Number($('#node-input-maxEvidenceChunks').val()); $('#node-input-maxEvidenceChunks').remove();
+    this.maxEvidenceChars = Number($('#node-input-maxEvidenceChars').val()); $('#node-input-maxEvidenceChars').remove();
+  }
+});
+</script>
+
+<script type="text/html" data-template-name="context-weave-generate">
+  <div class="form-row" data-field="name"><label for="node-input-name" title="Optional label shown on the flow.">name</label><input id="node-input-name" type="text"></div>
+  <div class="form-row" data-field="generationProfile"><label for="node-input-generationProfile" title="Generation model profile used by this node.">generation profile</label><input type="text" id="node-input-generationProfile"></div>
+  <div class="form-row" data-field="streamMode"><label for="node-input-streamMode" title="Whether progress is emitted on the event output.">stream mode</label><select id="node-input-streamMode"><option value="off">off</option><option value="events">events</option><option value="tokens">tokens</option></select></div>
+  <div class="form-row" data-field="evidenceSource"><label for="node-input-evidenceSource" title="Message path or typed value read at runtime.">evidence source</label><input id="node-input-evidenceSource" type="text"></div>
+  <div class="form-row" data-field="maxEvidenceChunks"><label for="node-input-maxEvidenceChunks" title="Maximum evidence chunks sent to a model.">max evidence chunks</label><input id="node-input-maxEvidenceChunks" type="number" step="any"></div>
+  <div class="form-row" data-field="maxEvidenceChars"><label for="node-input-maxEvidenceChars" title="Maximum total evidence characters sent to a model.">max evidence chars</label><input id="node-input-maxEvidenceChars" type="number" step="any"></div>
+  <div class="form-row" data-field="messagesSource"><label for="node-input-messagesSource" title="Message path or typed value read at runtime.">messages source</label><input id="node-input-messagesSource" type="text"></div>
+</script>
+
+<script type="text/html" data-help-name="context-weave-generate">
+  <p>General LLM node; must mark result as ungrounded if no evidence was used.</p>
+  <p><b>Input</b> explicit messages/template + optional evidence</p>
+  <p><b>Output</b> model response + trace</p>
+</script>

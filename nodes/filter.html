@@ -1,0 +1,54 @@
+<script type="text/javascript">
+RED.nodes.registerType("context-weave-filter", {
+  "category": "context weave",
+  "defaults": {
+    "name": {
+      "value": ""
+    },
+    "library": {
+      "value": "",
+      "type": "context-weave-library",
+      "required": false
+    },
+    "evidenceSource": {
+      "value": "contextWeave.evidence"
+    },
+    "evidenceSourceType": {
+      "value": "msg"
+    },
+    "metadataFilter": {
+      "value": ""
+    }
+  },
+  "color": "#5B8DEF",
+  "inputs": 1,
+  "outputs": 2,
+  "outputLabels": [
+    "success",
+    "error"
+  ],
+  "icon": "font-awesome/fa-filter",
+  paletteLabel: function () { return "filter"; },
+  label: function () { return this.name || "filter"; },
+  oneditprepare: function () {
+
+  },
+  oneditsave: function () {
+
+  }
+});
+</script>
+
+<script type="text/html" data-template-name="context-weave-filter">
+  <div class="form-row" data-field="name"><label for="node-input-name" title="Optional label shown on the flow.">name</label><input id="node-input-name" type="text"></div>
+  <div class="form-row" data-field="library"><label for="node-input-library" title="Library configuration used by this operation.">library</label><input type="text" id="node-input-library"></div>
+  <div class="form-row" data-field="evidenceSource"><label for="node-input-evidenceSource" title="Message path or typed value read at runtime.">evidence source</label><input id="node-input-evidenceSource" type="text"></div>
+  <div class="form-row" data-field="evidenceSourceType"><label for="node-input-evidenceSourceType" title="Node-RED typed-input kind used to evaluate the adjacent source value.">evidence source type</label><select id="node-input-evidenceSourceType"><option value="msg">msg</option><option value="str">str</option><option value="flow">flow</option><option value="global">global</option><option value="env">env</option><option value="bool">bool</option><option value="num">num</option><option value="json">json</option></select></div>
+  <div class="form-row" data-field="metadataFilter"><label for="node-input-metadataFilter" title="Safe metadata filter expression; raw SQL or JavaScript is never evaluated.">metadata filter</label><input id="node-input-metadataFilter" type="text"></div>
+</script>
+
+<script type="text/html" data-help-name="context-weave-filter">
+  <p>Applies post-retrieval policy/business filter. Security filters must instead be applied before retrieval.</p>
+  <p><b>Input</b> evidence + filter</p>
+  <p><b>Output</b> filtered evidence</p>
+</script>
