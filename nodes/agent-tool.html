@@ -32,9 +32,9 @@ RED.nodes.registerType("context-weave-agent-tool", {
 </script>
 
 <script type="text/html" data-template-name="context-weave-agent-tool">
-  <div class="form-row"><label for="node-input-name">name</label><input id="node-input-name" type="text"></div>
-  <div class="form-row"><label for="node-input-toolId">tool id</label><input id="node-input-toolId" type="text"></div>
-  <div class="form-row"><label for="node-input-resultSource">result source</label><input id="node-input-resultSource" type="text"></div>
+  <div class="form-row" data-field="name"><label for="node-input-name" title="Optional label shown on the flow.">name</label><input id="node-input-name" type="text"></div>
+  <div class="form-row" data-field="toolId"><label for="node-input-toolId" title="Allowlisted tool name expected by this bridge.">tool id</label><input id="node-input-toolId" type="text"></div>
+  <div class="form-row" data-field="resultSource"><label for="node-input-resultSource" title="Message path or typed value read at runtime.">result source</label><input id="node-input-resultSource" type="text"></div>
 </script>
 
 <script type="text/html" data-help-name="context-weave-agent-tool">

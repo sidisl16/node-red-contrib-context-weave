@@ -60,6 +60,18 @@ RED.nodes.registerType("context-weave-answer", {
   label: function () { return this.name || "answer"; },
   oneditprepare: function () {
     $('#node-input-retrievalRecipe').val(JSON.stringify(this.retrievalRecipe ?? {}, null, 2));
+    const visibilityRules = {"minimumCitations":{"field":"requireCitations","truthy":true},"retrievalRecipe":{"field":"autoRetrieve","truthy":true}};
+    const fieldValue = field => { const input = $('#node-input-' + field); return input.attr('type') === 'checkbox' ? input.prop('checked') : input.val(); };
+    const updateVisibility = () => {
+      Object.entries(visibilityRules).forEach(([field, rule]) => {
+        const value = fieldValue(rule.field);
+        const visible = rule.truthy ? value === true : rule.in ? rule.in.includes(value) : !rule.not.includes(value);
+        $('#node-input-' + field).closest('.form-row').toggle(visible);
+      });
+    };
+    $('#node-input-requireCitations').on('change.contextWeaveVisibility', updateVisibility);
+    $('#node-input-autoRetrieve').on('change.contextWeaveVisibility', updateVisibility);
+    updateVisibility();
   },
   oneditsave: function () {
     this.retrievalRecipe = JSON.parse($('#node-input-retrievalRecipe').val()); $('#node-input-retrievalRecipe').remove();
@@ -71,20 +83,20 @@ RED.nodes.registerType("context-weave-answer", {
 </script>
 
 <script type="text/html" data-template-name="context-weave-answer">
-  <div class="form-row"><label for="node-input-name">name</label><input id="node-input-name" type="text"></div>
-  <div class="form-row"><label for="node-input-generationProfile">generation profile</label><input type="text" id="node-input-generationProfile"></div>
-  <div class="form-row"><label for="node-input-streamMode">stream mode</label><input id="node-input-streamMode" type="text"></div>
-  <div class="form-row"><label for="node-input-evidenceSource">evidence source</label><input id="node-input-evidenceSource" type="text"></div>
-  <div class="form-row"><label for="node-input-maxEvidenceChunks">max evidence chunks</label><input id="node-input-maxEvidenceChunks" type="number" step="any"></div>
-  <div class="form-row"><label for="node-input-maxEvidenceChars">max evidence chars</label><input id="node-input-maxEvidenceChars" type="number" step="any"></div>
-  <div class="form-row"><label for="node-input-querySource">query source</label><input id="node-input-querySource" type="text"></div>
-  <div class="form-row"><label for="node-input-instructions">instructions</label><input id="node-input-instructions" type="text"></div>
-  <div class="form-row"><label for="node-input-requireCitations">require citations</label><input id="node-input-requireCitations" type="checkbox"></div>
-  <div class="form-row"><label for="node-input-minimumCitations">minimum citations</label><input id="node-input-minimumCitations" type="number" step="any"></div>
-  <div class="form-row"><label for="node-input-citationFormat">citation format</label><input id="node-input-citationFormat" type="text"></div>
-  <div class="form-row"><label for="node-input-noEvidenceText">no evidence text</label><input id="node-input-noEvidenceText" type="text"></div>
-  <div class="form-row"><label for="node-input-autoRetrieve">auto retrieve</label><input id="node-input-autoRetrieve" type="checkbox"></div>
-  <div class="form-row"><label for="node-input-retrievalRecipe">retrieval recipe</label><textarea id="node-input-retrievalRecipe" rows="3" style="width:70%"></textarea></div>
+  <div class="form-row" data-field="name"><label for="node-input-name" title="Optional label shown on the flow.">name</label><input id="node-input-name" type="text"></div>
+  <div class="form-row" data-field="generationProfile"><label for="node-input-generationProfile" title="Generation model profile used by this node.">generation profile</label><input type="text" id="node-input-generationProfile"></div>
+  <div class="form-row" data-field="streamMode"><label for="node-input-streamMode" title="Whether progress is emitted on the event output.">stream mode</label><select id="node-input-streamMode"><option value="off">off</option><option value="events">events</option><option value="tokens">tokens</option></select></div>
+  <div class="form-row" data-field="evidenceSource"><label for="node-input-evidenceSource" title="Message path or typed value read at runtime.">evidence source</label><input id="node-input-evidenceSource" type="text"></div>
+  <div class="form-row" data-field="maxEvidenceChunks"><label for="node-input-maxEvidenceChunks" title="Maximum evidence chunks sent to a model.">max evidence chunks</label><input id="node-input-maxEvidenceChunks" type="number" step="any"></div>
+  <div class="form-row" data-field="maxEvidenceChars"><label for="node-input-maxEvidenceChars" title="Maximum total evidence characters sent to a model.">max evidence chars</label><input id="node-input-maxEvidenceChars" type="number" step="any"></div>
+  <div class="form-row" data-field="querySource"><label for="node-input-querySource" title="Message path or typed value read at runtime.">query source</label><input id="node-input-querySource" type="text"></div>
+  <div class="form-row" data-field="instructions"><label for="node-input-instructions" title="Additional trusted instructions appended to the built-in prompt.">instructions</label><input id="node-input-instructions" type="text"></div>
+  <div class="form-row" data-field="requireCitations"><label for="node-input-requireCitations" title="Reject an evidence-backed answer without valid citations.">require citations</label><input id="node-input-requireCitations" type="checkbox"></div>
+  <div class="form-row" data-field="minimumCitations"><label for="node-input-minimumCitations" title="Minimum valid evidence citations required.">minimum citations</label><input id="node-input-minimumCitations" type="number" step="any"></div>
+  <div class="form-row" data-field="citationFormat"><label for="node-input-citationFormat" title="How validated citation markers are rendered.">citation format</label><select id="node-input-citationFormat"><option value="structured-and-numeric">structured-and-numeric</option><option value="markdown">markdown</option><option value="html">html</option></select></div>
+  <div class="form-row" data-field="noEvidenceText"><label for="node-input-noEvidenceText" title="Safe response returned when retrieval produces no evidence.">no evidence text</label><input id="node-input-noEvidenceText" type="text"></div>
+  <div class="form-row" data-field="autoRetrieve"><label for="node-input-autoRetrieve" title="Run retrieval inside the answer node before generation.">auto retrieve</label><input id="node-input-autoRetrieve" type="checkbox"></div>
+  <div class="form-row" data-field="retrievalRecipe"><label for="node-input-retrievalRecipe" title="JSON options passed to the internal retrieve operation.">retrieval recipe</label><textarea id="node-input-retrievalRecipe" rows="3" style="width:70%"></textarea></div>
 </script>
 
 <script type="text/html" data-help-name="context-weave-answer">

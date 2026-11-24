@@ -32,11 +32,11 @@ RED.nodes.registerType("context-weave-conversation-store", {
 </script>
 
 <script type="text/html" data-template-name="context-weave-conversation-store">
-  <div class="form-row"><label for="node-config-input-name">name</label><input id="node-config-input-name" type="text"></div>
-  <div class="form-row"><label for="node-config-input-adapter">adapter</label><select id="node-config-input-adapter"><option value="sqlite">sqlite</option><option value="memory">memory</option></select></div>
-  <div class="form-row"><label for="node-config-input-ttlSeconds">ttl seconds</label><input id="node-config-input-ttlSeconds" type="number" step="any"></div>
-  <div class="form-row"><label for="node-config-input-maxTurns">max turns</label><input id="node-config-input-maxTurns" type="number" step="any"></div>
-  <div class="form-row"><label for="node-config-input-maxChars">max chars</label><input id="node-config-input-maxChars" type="number" step="any"></div>
+  <div class="form-row" data-field="name"><label for="node-config-input-name" title="Optional label shown on the flow.">name</label><input id="node-config-input-name" type="text"></div>
+  <div class="form-row" data-field="adapter"><label for="node-config-input-adapter" title="Backend or API protocol used by this connection.">adapter</label><select id="node-config-input-adapter"><option value="sqlite">sqlite</option><option value="memory">memory</option></select></div>
+  <div class="form-row" data-field="ttlSeconds"><label for="node-config-input-ttlSeconds" title="Conversation lifetime after its latest activity.">ttl seconds</label><input id="node-config-input-ttlSeconds" type="number" step="any"></div>
+  <div class="form-row" data-field="maxTurns"><label for="node-config-input-maxTurns" title="Maximum retained conversation messages.">max turns</label><input id="node-config-input-maxTurns" type="number" step="any"></div>
+  <div class="form-row" data-field="maxChars"><label for="node-config-input-maxChars" title="Maximum total retained conversation characters.">max chars</label><input id="node-config-input-maxChars" type="number" step="any"></div>
 </script>
 
 <script type="text/html" data-help-name="context-weave-conversation-store">

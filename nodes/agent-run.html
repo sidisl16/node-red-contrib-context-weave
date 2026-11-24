@@ -76,20 +76,20 @@ RED.nodes.registerType("context-weave-agent-run", {
 </script>
 
 <script type="text/html" data-template-name="context-weave-agent-run">
-  <div class="form-row"><label for="node-input-name">name</label><input id="node-input-name" type="text"></div>
-  <div class="form-row"><label for="node-input-generationProfile">generation profile</label><input type="text" id="node-input-generationProfile"></div>
-  <div class="form-row"><label for="node-input-streamMode">stream mode</label><input id="node-input-streamMode" type="text"></div>
-  <div class="form-row"><label for="node-input-querySource">query source</label><input id="node-input-querySource" type="text"></div>
-  <div class="form-row"><label for="node-input-store">store</label><input type="text" id="node-input-store"></div>
-  <div class="form-row"><label for="node-input-library">library</label><input type="text" id="node-input-library"></div>
-  <div class="form-row"><label for="node-input-tools">tools</label><textarea id="node-input-tools" rows="3" style="width:70%"></textarea></div>
-  <div class="form-row"><label for="node-input-maxToolCalls">max tool calls</label><input id="node-input-maxToolCalls" type="number" step="any"></div>
-  <div class="form-row"><label for="node-input-timeoutSeconds">timeout seconds</label><input id="node-input-timeoutSeconds" type="number" step="any"></div>
-  <div class="form-row"><label for="node-input-instructions">instructions</label><input id="node-input-instructions" type="text"></div>
-  <div class="form-row"><label for="node-input-requireCitations">require citations</label><input id="node-input-requireCitations" type="checkbox"></div>
-  <div class="form-row"><label for="node-input-evidenceSource">evidence source</label><input id="node-input-evidenceSource" type="text"></div>
-  <div class="form-row"><label for="node-input-maxEvidenceChunks">max evidence chunks</label><input id="node-input-maxEvidenceChunks" type="number" step="any"></div>
-  <div class="form-row"><label for="node-input-maxEvidenceChars">max evidence chars</label><input id="node-input-maxEvidenceChars" type="number" step="any"></div>
+  <div class="form-row" data-field="name"><label for="node-input-name" title="Optional label shown on the flow.">name</label><input id="node-input-name" type="text"></div>
+  <div class="form-row" data-field="generationProfile"><label for="node-input-generationProfile" title="Generation model profile used by this node.">generation profile</label><input type="text" id="node-input-generationProfile"></div>
+  <div class="form-row" data-field="streamMode"><label for="node-input-streamMode" title="Whether progress is emitted on the event output.">stream mode</label><select id="node-input-streamMode"><option value="off">off</option><option value="events">events</option><option value="tokens">tokens</option></select></div>
+  <div class="form-row" data-field="querySource"><label for="node-input-querySource" title="Message path or typed value read at runtime.">query source</label><input id="node-input-querySource" type="text"></div>
+  <div class="form-row" data-field="store"><label for="node-input-store" title="Configuration value for store.">store</label><input type="text" id="node-input-store"></div>
+  <div class="form-row" data-field="library"><label for="node-input-library" title="Library configuration used by this operation.">library</label><input type="text" id="node-input-library"></div>
+  <div class="form-row" data-field="tools"><label for="node-input-tools" title="JSON array of agent tool contracts and retrieval recipes.">tools</label><textarea id="node-input-tools" rows="3" style="width:70%"></textarea></div>
+  <div class="form-row" data-field="maxToolCalls"><label for="node-input-maxToolCalls" title="Maximum tool calls allowed for one agent run.">max tool calls</label><input id="node-input-maxToolCalls" type="number" step="any"></div>
+  <div class="form-row" data-field="timeoutSeconds"><label for="node-input-timeoutSeconds" title="Maximum extraction or agent duration in seconds.">timeout seconds</label><input id="node-input-timeoutSeconds" type="number" step="any"></div>
+  <div class="form-row" data-field="instructions"><label for="node-input-instructions" title="Additional trusted instructions appended to the built-in prompt.">instructions</label><input id="node-input-instructions" type="text"></div>
+  <div class="form-row" data-field="requireCitations"><label for="node-input-requireCitations" title="Reject an evidence-backed answer without valid citations.">require citations</label><input id="node-input-requireCitations" type="checkbox"></div>
+  <div class="form-row" data-field="evidenceSource"><label for="node-input-evidenceSource" title="Message path or typed value read at runtime.">evidence source</label><input id="node-input-evidenceSource" type="text"></div>
+  <div class="form-row" data-field="maxEvidenceChunks"><label for="node-input-maxEvidenceChunks" title="Maximum evidence chunks sent to a model.">max evidence chunks</label><input id="node-input-maxEvidenceChunks" type="number" step="any"></div>
+  <div class="form-row" data-field="maxEvidenceChars"><label for="node-input-maxEvidenceChars" title="Maximum total evidence characters sent to a model.">max evidence chars</label><input id="node-input-maxEvidenceChars" type="number" step="any"></div>
 </script>
 
 <script type="text/html" data-help-name="context-weave-agent-run">

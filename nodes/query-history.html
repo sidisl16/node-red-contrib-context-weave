@@ -40,11 +40,11 @@ RED.nodes.registerType("context-weave-query-history", {
 </script>
 
 <script type="text/html" data-template-name="context-weave-query-history">
-  <div class="form-row"><label for="node-input-name">name</label><input id="node-input-name" type="text"></div>
-  <div class="form-row"><label for="node-input-library">library</label><input type="text" id="node-input-library"></div>
-  <div class="form-row"><label for="node-input-pageSize">page size</label><input id="node-input-pageSize" type="number" step="any"></div>
-  <div class="form-row"><label for="node-input-cursorSource">cursor source</label><input id="node-input-cursorSource" type="text"></div>
-  <div class="form-row"><label for="node-input-cursorSourceType">cursor source type</label><select id="node-input-cursorSourceType"><option value="msg">msg</option><option value="str">str</option><option value="flow">flow</option><option value="global">global</option><option value="env">env</option><option value="bool">bool</option><option value="num">num</option><option value="json">json</option></select></div>
+  <div class="form-row" data-field="name"><label for="node-input-name" title="Optional label shown on the flow.">name</label><input id="node-input-name" type="text"></div>
+  <div class="form-row" data-field="library"><label for="node-input-library" title="Library configuration used by this operation.">library</label><input type="text" id="node-input-library"></div>
+  <div class="form-row" data-field="pageSize"><label for="node-input-pageSize" title="Maximum entries returned on one page.">page size</label><input id="node-input-pageSize" type="number" step="any"></div>
+  <div class="form-row" data-field="cursorSource"><label for="node-input-cursorSource" title="Message path or typed value read at runtime.">cursor source</label><input id="node-input-cursorSource" type="text"></div>
+  <div class="form-row" data-field="cursorSourceType"><label for="node-input-cursorSourceType" title="Node-RED typed-input kind used to evaluate the adjacent source value.">cursor source type</label><select id="node-input-cursorSourceType"><option value="msg">msg</option><option value="str">str</option><option value="flow">flow</option><option value="global">global</option><option value="env">env</option><option value="bool">bool</option><option value="num">num</option><option value="json">json</option></select></div>
 </script>
 
 <script type="text/html" data-help-name="context-weave-query-history">

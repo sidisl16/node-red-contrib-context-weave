@@ -46,13 +46,13 @@ RED.nodes.registerType("context-weave-index", {
 </script>
 
 <script type="text/html" data-template-name="context-weave-index">
-  <div class="form-row"><label for="node-input-name">name</label><input id="node-input-name" type="text"></div>
-  <div class="form-row"><label for="node-input-library">library</label><input type="text" id="node-input-library"></div>
-  <div class="form-row"><label for="node-input-mode">mode</label><input id="node-input-mode" type="text"></div>
-  <div class="form-row"><label for="node-input-documentSource">document source</label><input id="node-input-documentSource" type="text"></div>
-  <div class="form-row"><label for="node-input-documentSourceType">document source type</label><select id="node-input-documentSourceType"><option value="msg">msg</option><option value="str">str</option><option value="flow">flow</option><option value="global">global</option><option value="env">env</option><option value="bool">bool</option><option value="num">num</option><option value="json">json</option></select></div>
-  <div class="form-row"><label for="node-input-chunksSource">chunks source</label><input id="node-input-chunksSource" type="text"></div>
-  <div class="form-row"><label for="node-input-chunksSourceType">chunks source type</label><select id="node-input-chunksSourceType"><option value="msg">msg</option><option value="str">str</option><option value="flow">flow</option><option value="global">global</option><option value="env">env</option><option value="bool">bool</option><option value="num">num</option><option value="json">json</option></select></div>
+  <div class="form-row" data-field="name"><label for="node-input-name" title="Optional label shown on the flow.">name</label><input id="node-input-name" type="text"></div>
+  <div class="form-row" data-field="library"><label for="node-input-library" title="Library configuration used by this operation.">library</label><input type="text" id="node-input-library"></div>
+  <div class="form-row" data-field="mode"><label for="node-input-mode" title="Operation or retrieval mode.">mode</label><select id="node-input-mode"><option value="upsert">upsert</option><option value="create-only">create-only</option></select></div>
+  <div class="form-row" data-field="documentSource"><label for="node-input-documentSource" title="Message path or typed value read at runtime.">document source</label><input id="node-input-documentSource" type="text"></div>
+  <div class="form-row" data-field="documentSourceType"><label for="node-input-documentSourceType" title="Node-RED typed-input kind used to evaluate the adjacent source value.">document source type</label><select id="node-input-documentSourceType"><option value="msg">msg</option><option value="str">str</option><option value="flow">flow</option><option value="global">global</option><option value="env">env</option><option value="bool">bool</option><option value="num">num</option><option value="json">json</option></select></div>
+  <div class="form-row" data-field="chunksSource"><label for="node-input-chunksSource" title="Message path or typed value read at runtime.">chunks source</label><input id="node-input-chunksSource" type="text"></div>
+  <div class="form-row" data-field="chunksSourceType"><label for="node-input-chunksSourceType" title="Node-RED typed-input kind used to evaluate the adjacent source value.">chunks source type</label><select id="node-input-chunksSourceType"><option value="msg">msg</option><option value="str">str</option><option value="flow">flow</option><option value="global">global</option><option value="env">env</option><option value="bool">bool</option><option value="num">num</option><option value="json">json</option></select></div>
 </script>
 
 <script type="text/html" data-help-name="context-weave-index">

@@ -49,14 +49,14 @@ RED.nodes.registerType("context-weave-library", {
 </script>
 
 <script type="text/html" data-template-name="context-weave-library">
-  <div class="form-row"><label for="node-config-input-name">name</label><input id="node-config-input-name" type="text"></div>
-  <div class="form-row"><label for="node-config-input-libraryId">library id</label><input id="node-config-input-libraryId" type="text"></div>
-  <div class="form-row"><label for="node-config-input-embeddingProfile">embedding profile</label><input type="text" id="node-config-input-embeddingProfile"></div>
-  <div class="form-row"><label for="node-config-input-vectorProvider">vector provider</label><input type="text" id="node-config-input-vectorProvider"></div>
-  <div class="form-row"><label for="node-config-input-privacy">privacy</label><select id="node-config-input-privacy"><option value="local-only">local-only</option><option value="allow-commercial-api">allow-commercial-api</option><option value="commercial-api-with-redaction">commercial-api-with-redaction</option></select></div>
-  <div class="form-row"><label for="node-config-input-filterAttributes">filter attributes</label><textarea id="node-config-input-filterAttributes" rows="3" style="width:70%"></textarea></div>
-  <div class="form-row"><label for="node-config-input-accessPolicy">access policy</label><textarea id="node-config-input-accessPolicy" rows="3" style="width:70%"></textarea></div>
-  <div class="form-row"><label for="node-config-input-allowDestructive">allow destructive</label><input id="node-config-input-allowDestructive" type="checkbox"></div>
+  <div class="form-row" data-field="name"><label for="node-config-input-name" title="Optional label shown on the flow.">name</label><input id="node-config-input-name" type="text"></div>
+  <div class="form-row" data-field="libraryId"><label for="node-config-input-libraryId" title="Stable machine ID for the library.">library id</label><input id="node-config-input-libraryId" type="text"></div>
+  <div class="form-row" data-field="embeddingProfile"><label for="node-config-input-embeddingProfile" title="Embedding model profile used for indexing and dense retrieval.">embedding profile</label><input type="text" id="node-config-input-embeddingProfile"></div>
+  <div class="form-row" data-field="vectorProvider"><label for="node-config-input-vectorProvider" title="Optional Qdrant, pgvector, or Chroma provider; blank uses SQLite vectors.">vector provider</label><input type="text" id="node-config-input-vectorProvider"></div>
+  <div class="form-row" data-field="privacy"><label for="node-config-input-privacy" title="Controls whether content may leave the local host.">privacy</label><select id="node-config-input-privacy"><option value="local-only">local-only</option><option value="allow-commercial-api">allow-commercial-api</option><option value="commercial-api-with-redaction">commercial-api-with-redaction</option></select></div>
+  <div class="form-row" data-field="filterAttributes"><label for="node-config-input-filterAttributes" title="Metadata fields that the safe filter grammar may query.">filter attributes</label><textarea id="node-config-input-filterAttributes" rows="3" style="width:70%"></textarea></div>
+  <div class="form-row" data-field="accessPolicy"><label for="node-config-input-accessPolicy" title="Tenant access policy JSON applied before retrieval.">access policy</label><textarea id="node-config-input-accessPolicy" rows="3" style="width:70%"></textarea></div>
+  <div class="form-row" data-field="allowDestructive"><label for="node-config-input-allowDestructive" title="Allows reset and deletion operations for this library.">allow destructive</label><input id="node-config-input-allowDestructive" type="checkbox"></div>
 </script>
 
 <script type="text/html" data-help-name="context-weave-library">

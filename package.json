@@ -21,6 +21,7 @@
     "README.md"
   ],
   "scripts": {
+    "build": "node scripts/build-nodes.js && node scripts/build-user-guide.js",
     "test": "node --test",
     "coverage:unit": "node --require ./lib/runtime.js --test --experimental-test-coverage --test-coverage-include='lib/**/*.js' test/ingest.test.js test/knowledge.test.js test/models.test.js",
     "coverage": "node --test --experimental-test-coverage --test-coverage-include='lib/**/*.js' --test-coverage-lines=70",

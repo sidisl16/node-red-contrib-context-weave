@@ -4,13 +4,8 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const {config,ports} = require('../lib/definitions');
+const {choicesFor,conditionFor,describe,references} = require('./editor-schema');
 const fields = Object.assign({},config,require('../lib/ingest-fields'),require('../lib/knowledge-fields'),require('../lib/model-fields'));
-const references = {library:'library',provider:'provider',embeddingProfile:'model-profile',generationProfile:'model-profile',verifierProfile:'model-profile',rerankProfile:'model-profile',sourceProfile:'source-profile',store:'conversation-store',extractor:'provider'};
-const choices = {
-  adapter:['ollama','openai','openai-compatible','anthropic','google-gemini','huggingface-tei','cross-encoder','tika','qdrant','pgvector','chroma'],
-  privacy:['local-only','allow-commercial-api','commercial-api-with-redaction'],purpose:['generation','embedding','reranking'],
-  contentKind:['auto','record','file','html','markdown','text']
-};
 const esc = s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
 const design = fs.readFileSync('docs/design.md','utf8');
 const descriptions = {};
@@ -30,16 +25,14 @@ for (const [type, props] of Object.entries(fields).sort(([a],[b])=>a.localeCompa
   const jsonFields=[], numbers=[];
   function row(key,control) {
     const label = key.replace(/[A-Z]/g,c=>' '+c.toLowerCase());
-    rows.push('  <div class="form-row"><label for="'+prefix+key+'">'+esc(label)+'</label>'+control+'</div>');
+    rows.push('  <div class="form-row" data-field="'+esc(key)+'"><label for="'+prefix+key+'" title="'+esc(describe(key))+'">'+esc(label)+'</label>'+control+'</div>');
   }
   for (const [key, val] of Object.entries({name:'',...props})) {
     const htmlId='id="'+prefix+key+'"';
     const ref=key==='vectorProvider'?'provider':references[key];
     defaults[key]={value:val,...(ref?{type:'context-weave-'+ref,required:false}:{})};
-    let options = key.endsWith('Type') && ['msg','str','flow','global','env','bool','num','json'].includes(val)
-      ? ['msg','str','flow','global','env','bool','num','json'] : choices[key];
-    if (key==='adapter' && type==='conversation-store') options=['sqlite','memory'];
-    if (options && !options.includes(val)) options=[val,...options];
+    const options = key.endsWith('Type') && ['msg','str','flow','global','env','bool','num','json'].includes(val)
+      ? ['msg','str','flow','global','env','bool','num','json'] : choicesFor(type,key,val);
     if (ref) row(key,'<input type="text" '+htmlId+'>');
     else if (options) row(key,'<select '+htmlId+'>'+options.map(o=>'<option value="'+esc(o)+'">'+esc(o)+'</option>').join('')+'</select>');
     else if (val!==null && typeof val==='object') {
@@ -52,11 +45,26 @@ for (const [type, props] of Object.entries(fields).sort(([a],[b])=>a.localeCompa
     }
   }
   if(type==='provider') row('apiKey','<input id="'+prefix+'apiKey" type="password" autocomplete="new-password">');
+  const rules = Object.fromEntries([...Object.keys(props),...(type==='provider'?['apiKey']:[])].map(key=>[key,conditionFor(type,key)]).filter(([,rule])=>rule));
+  const controllers = [...new Set(Object.values(rules).map(rule=>rule.field))];
+  const visibilityHook = rules && Object.keys(rules).length ? [
+    '    const visibilityRules = '+JSON.stringify(rules)+';',
+    '    const fieldValue = field => { const input = $(\'#'+prefix+'\' + field); return input.attr(\'type\') === \'checkbox\' ? input.prop(\'checked\') : input.val(); };',
+    '    const updateVisibility = () => {',
+    '      Object.entries(visibilityRules).forEach(([field, rule]) => {',
+    '        const value = fieldValue(rule.field);',
+    '        const visible = rule.truthy ? value === true : rule.in ? rule.in.includes(value) : !rule.not.includes(value);',
+    '        $(\'#'+prefix+'\' + field).closest(\'.form-row\').toggle(visible);',
+    '      });',
+    '    };',
+    ...controllers.map(key=>'    $(\'#'+prefix+key+'\').on(\'change.contextWeaveVisibility\', updateVisibility);'),
+    '    updateVisibility();'
+  ].join('\n') : '';
   const def={category:configOnly?'config':'context weave',defaults,...(configOnly?{}:{color:'#b2d5cc',inputs:1,outputs:labels.length,outputLabels:labels,icon:'font-awesome/fa-book'}),...(type==='provider'?{credentials:{apiKey:{type:'password'}}}:{})};
   const hooks=[
     "  paletteLabel: function () { return "+JSON.stringify(type)+"; }",
     "  label: function () { return this.name || "+JSON.stringify(type)+"; }",
-    "  oneditprepare: function () {\n"+jsonFields.map(k=>"    $('#"+prefix+k+"').val(JSON.stringify(this."+k+" ?? "+JSON.stringify(props[k])+", null, 2));").join('\n')+"\n  }",
+    "  oneditprepare: function () {\n"+[jsonFields.map(k=>"    $('#"+prefix+k+"').val(JSON.stringify(this."+k+" ?? "+JSON.stringify(props[k])+", null, 2));").join('\n'),visibilityHook].filter(Boolean).join('\n')+"\n  }",
     "  oneditsave: function () {\n"+[...jsonFields.map(k=>"    this."+k+" = JSON.parse($('#"+prefix+k+"').val()); $('#"+prefix+k+"').remove();"),...numbers.map(k=>"    this."+k+" = Number($('#"+prefix+k+"').val()); $('#"+prefix+k+"').remove();")].join('\n')+"\n  }"
   ].join(',\n');
   const definition = JSON.stringify(def,null,2).slice(0,-2)+',\n'+hooks+'\n}';

@@ -44,13 +44,13 @@ RED.nodes.registerType("context-weave-record-ingest", {
 </script>
 
 <script type="text/html" data-template-name="context-weave-record-ingest">
-  <div class="form-row"><label for="node-input-name">name</label><input id="node-input-name" type="text"></div>
-  <div class="form-row"><label for="node-input-documentSource">document source</label><input id="node-input-documentSource" type="text"></div>
-  <div class="form-row"><label for="node-input-documentSourceType">document source type</label><select id="node-input-documentSourceType"><option value="msg">msg</option><option value="str">str</option><option value="flow">flow</option><option value="global">global</option><option value="env">env</option><option value="bool">bool</option><option value="num">num</option><option value="json">json</option></select></div>
-  <div class="form-row"><label for="node-input-idPath">id path</label><input id="node-input-idPath" type="text"></div>
-  <div class="form-row"><label for="node-input-titlePath">title path</label><input id="node-input-titlePath" type="text"></div>
-  <div class="form-row"><label for="node-input-textPath">text path</label><input id="node-input-textPath" type="text"></div>
-  <div class="form-row"><label for="node-input-metadataPath">metadata path</label><input id="node-input-metadataPath" type="text"></div>
+  <div class="form-row" data-field="name"><label for="node-input-name" title="Optional label shown on the flow.">name</label><input id="node-input-name" type="text"></div>
+  <div class="form-row" data-field="documentSource"><label for="node-input-documentSource" title="Message path or typed value read at runtime.">document source</label><input id="node-input-documentSource" type="text"></div>
+  <div class="form-row" data-field="documentSourceType"><label for="node-input-documentSourceType" title="Node-RED typed-input kind used to evaluate the adjacent source value.">document source type</label><select id="node-input-documentSourceType"><option value="msg">msg</option><option value="str">str</option><option value="flow">flow</option><option value="global">global</option><option value="env">env</option><option value="bool">bool</option><option value="num">num</option><option value="json">json</option></select></div>
+  <div class="form-row" data-field="idPath"><label for="node-input-idPath" title="Path to the record document ID.">id path</label><input id="node-input-idPath" type="text"></div>
+  <div class="form-row" data-field="titlePath"><label for="node-input-titlePath" title="Path to the optional record title.">title path</label><input id="node-input-titlePath" type="text"></div>
+  <div class="form-row" data-field="textPath"><label for="node-input-textPath" title="Path to the record text.">text path</label><input id="node-input-textPath" type="text"></div>
+  <div class="form-row" data-field="metadataPath"><label for="node-input-metadataPath" title="Path to the record metadata object.">metadata path</label><input id="node-input-metadataPath" type="text"></div>
 </script>
 
 <script type="text/html" data-help-name="context-weave-record-ingest">

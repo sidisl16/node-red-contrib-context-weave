@@ -32,11 +32,11 @@ RED.nodes.registerType("context-weave-provider", {
 </script>
 
 <script type="text/html" data-template-name="context-weave-provider">
-  <div class="form-row"><label for="node-config-input-name">name</label><input id="node-config-input-name" type="text"></div>
-  <div class="form-row"><label for="node-config-input-adapter">adapter</label><select id="node-config-input-adapter"><option value="ollama">ollama</option><option value="openai">openai</option><option value="openai-compatible">openai-compatible</option><option value="anthropic">anthropic</option><option value="google-gemini">google-gemini</option><option value="huggingface-tei">huggingface-tei</option><option value="cross-encoder">cross-encoder</option><option value="tika">tika</option><option value="qdrant">qdrant</option><option value="pgvector">pgvector</option><option value="chroma">chroma</option></select></div>
-  <div class="form-row"><label for="node-config-input-baseUrl">base url</label><input id="node-config-input-baseUrl" type="text"></div>
-  <div class="form-row"><label for="node-config-input-timeoutMs">timeout ms</label><input id="node-config-input-timeoutMs" type="number" step="any"></div>
-  <div class="form-row"><label for="node-config-input-apiKey">api key</label><input id="node-config-input-apiKey" type="password" autocomplete="new-password"></div>
+  <div class="form-row" data-field="name"><label for="node-config-input-name" title="Optional label shown on the flow.">name</label><input id="node-config-input-name" type="text"></div>
+  <div class="form-row" data-field="adapter"><label for="node-config-input-adapter" title="Backend or API protocol used by this connection.">adapter</label><select id="node-config-input-adapter"><option value="ollama">ollama</option><option value="openai">openai</option><option value="openai-compatible">openai-compatible</option><option value="anthropic">anthropic</option><option value="google-gemini">google-gemini</option><option value="huggingface-tei">huggingface-tei</option><option value="cross-encoder">cross-encoder</option><option value="tika">tika</option><option value="qdrant">qdrant</option><option value="pgvector">pgvector</option><option value="chroma">chroma</option></select></div>
+  <div class="form-row" data-field="baseUrl"><label for="node-config-input-baseUrl" title="Service endpoint or PostgreSQL connection URL.">base url</label><input id="node-config-input-baseUrl" type="text"></div>
+  <div class="form-row" data-field="timeoutMs"><label for="node-config-input-timeoutMs" title="Maximum provider request time in milliseconds.">timeout ms</label><input id="node-config-input-timeoutMs" type="number" step="any"></div>
+  <div class="form-row" data-field="apiKey"><label for="node-config-input-apiKey" title="Secret used by the selected service. Node-RED stores it as a credential.">api key</label><input id="node-config-input-apiKey" type="password" autocomplete="new-password"></div>
 </script>
 
 <script type="text/html" data-help-name="context-weave-provider">

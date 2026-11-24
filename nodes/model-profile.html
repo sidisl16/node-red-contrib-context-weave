@@ -54,6 +54,17 @@ RED.nodes.registerType("context-weave-model-profile", {
   label: function () { return this.name || "model-profile"; },
   oneditprepare: function () {
     $('#node-config-input-fallbackProfiles').val(JSON.stringify(this.fallbackProfiles ?? [], null, 2));
+    const visibilityRules = {"temperature":{"field":"purpose","in":["generation"]},"maxOutputTokens":{"field":"purpose","in":["generation"]},"maxContextChars":{"field":"purpose","in":["generation","reranking"]},"batchSize":{"field":"purpose","in":["embedding","reranking"]},"revision":{"field":"purpose","in":["embedding"]},"dimensions":{"field":"purpose","in":["embedding"]},"topP":{"field":"purpose","in":["generation"]},"normalization":{"field":"purpose","in":["embedding"]}};
+    const fieldValue = field => { const input = $('#node-config-input-' + field); return input.attr('type') === 'checkbox' ? input.prop('checked') : input.val(); };
+    const updateVisibility = () => {
+      Object.entries(visibilityRules).forEach(([field, rule]) => {
+        const value = fieldValue(rule.field);
+        const visible = rule.truthy ? value === true : rule.in ? rule.in.includes(value) : !rule.not.includes(value);
+        $('#node-config-input-' + field).closest('.form-row').toggle(visible);
+      });
+    };
+    $('#node-config-input-purpose').on('change.contextWeaveVisibility', updateVisibility);
+    updateVisibility();
   },
   oneditsave: function () {
     this.fallbackProfiles = JSON.parse($('#node-config-input-fallbackProfiles').val()); $('#node-config-input-fallbackProfiles').remove();
@@ -67,21 +78,21 @@ RED.nodes.registerType("context-weave-model-profile", {
 </script>
 
 <script type="text/html" data-template-name="context-weave-model-profile">
-  <div class="form-row"><label for="node-config-input-name">name</label><input id="node-config-input-name" type="text"></div>
-  <div class="form-row"><label for="node-config-input-provider">provider</label><input type="text" id="node-config-input-provider"></div>
-  <div class="form-row"><label for="node-config-input-purpose">purpose</label><select id="node-config-input-purpose"><option value="generation">generation</option><option value="embedding">embedding</option><option value="reranking">reranking</option></select></div>
-  <div class="form-row"><label for="node-config-input-model">model</label><input id="node-config-input-model" type="text"></div>
-  <div class="form-row"><label for="node-config-input-privacy">privacy</label><select id="node-config-input-privacy"><option value="local-only">local-only</option><option value="allow-commercial-api">allow-commercial-api</option><option value="commercial-api-with-redaction">commercial-api-with-redaction</option></select></div>
-  <div class="form-row"><label for="node-config-input-temperature">temperature</label><input id="node-config-input-temperature" type="number" step="any"></div>
-  <div class="form-row"><label for="node-config-input-maxOutputTokens">max output tokens</label><input id="node-config-input-maxOutputTokens" type="number" step="any"></div>
-  <div class="form-row"><label for="node-config-input-maxContextChars">max context chars</label><input id="node-config-input-maxContextChars" type="number" step="any"></div>
-  <div class="form-row"><label for="node-config-input-batchSize">batch size</label><input id="node-config-input-batchSize" type="number" step="any"></div>
-  <div class="form-row"><label for="node-config-input-revision">revision</label><input id="node-config-input-revision" type="text"></div>
-  <div class="form-row"><label for="node-config-input-dimensions">dimensions</label><input id="node-config-input-dimensions" type="number" step="any"></div>
-  <div class="form-row"><label for="node-config-input-topP">top p</label><input id="node-config-input-topP" type="text"></div>
-  <div class="form-row"><label for="node-config-input-normalization">normalization</label><input id="node-config-input-normalization" type="text"></div>
-  <div class="form-row"><label for="node-config-input-fallbackProfiles">fallback profiles</label><textarea id="node-config-input-fallbackProfiles" rows="3" style="width:70%"></textarea></div>
-  <div class="form-row"><label for="node-config-input-failInsteadOfFallback">fail instead of fallback</label><input id="node-config-input-failInsteadOfFallback" type="checkbox"></div>
+  <div class="form-row" data-field="name"><label for="node-config-input-name" title="Optional label shown on the flow.">name</label><input id="node-config-input-name" type="text"></div>
+  <div class="form-row" data-field="provider"><label for="node-config-input-provider" title="Provider configuration used by this profile.">provider</label><input type="text" id="node-config-input-provider"></div>
+  <div class="form-row" data-field="purpose"><label for="node-config-input-purpose" title="Capability this model profile is allowed to perform.">purpose</label><select id="node-config-input-purpose"><option value="generation">generation</option><option value="embedding">embedding</option><option value="reranking">reranking</option></select></div>
+  <div class="form-row" data-field="model"><label for="node-config-input-model" title="Exact model identifier expected by the provider.">model</label><input id="node-config-input-model" type="text"></div>
+  <div class="form-row" data-field="privacy"><label for="node-config-input-privacy" title="Controls whether content may leave the local host.">privacy</label><select id="node-config-input-privacy"><option value="local-only">local-only</option><option value="allow-commercial-api">allow-commercial-api</option><option value="commercial-api-with-redaction">commercial-api-with-redaction</option></select></div>
+  <div class="form-row" data-field="temperature"><label for="node-config-input-temperature" title="Generation randomness; lower values are more deterministic.">temperature</label><input id="node-config-input-temperature" type="number" step="any"></div>
+  <div class="form-row" data-field="maxOutputTokens"><label for="node-config-input-maxOutputTokens" title="Maximum tokens requested from a generation model.">max output tokens</label><input id="node-config-input-maxOutputTokens" type="number" step="any"></div>
+  <div class="form-row" data-field="maxContextChars"><label for="node-config-input-maxContextChars" title="Maximum characters admitted to the model context.">max context chars</label><input id="node-config-input-maxContextChars" type="number" step="any"></div>
+  <div class="form-row" data-field="batchSize"><label for="node-config-input-batchSize" title="Maximum embedding or reranking items in one request.">batch size</label><input id="node-config-input-batchSize" type="number" step="any"></div>
+  <div class="form-row" data-field="revision"><label for="node-config-input-revision" title="Embedding model revision recorded with indexed vectors.">revision</label><input id="node-config-input-revision" type="text"></div>
+  <div class="form-row" data-field="dimensions"><label for="node-config-input-dimensions" title="Expected embedding dimensions; zero lets the provider determine it.">dimensions</label><input id="node-config-input-dimensions" type="number" step="any"></div>
+  <div class="form-row" data-field="topP"><label for="node-config-input-topP" title="Optional nucleus-sampling limit.">top p</label><input id="node-config-input-topP" type="text"></div>
+  <div class="form-row" data-field="normalization"><label for="node-config-input-normalization" title="Vector normalization policy.">normalization</label><select id="node-config-input-normalization"><option value="none">none</option><option value="l2">l2</option></select></div>
+  <div class="form-row" data-field="fallbackProfiles"><label for="node-config-input-fallbackProfiles" title="Ordered model-profile IDs tried after a retryable failure.">fallback profiles</label><textarea id="node-config-input-fallbackProfiles" rows="3" style="width:70%"></textarea></div>
+  <div class="form-row" data-field="failInsteadOfFallback"><label for="node-config-input-failInsteadOfFallback" title="Stop instead of sending data to a fallback profile.">fail instead of fallback</label><input id="node-config-input-failInsteadOfFallback" type="checkbox"></div>
 </script>
 
 <script type="text/html" data-help-name="context-weave-model-profile">

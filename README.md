@@ -8,6 +8,8 @@
 
 ContextWeave is a set of Node-RED nodes for answering questions using your own documents. Connect a data source, index its documents, and the flow can find relevant passages and cite them in its answers. The **context weave** palette includes 34 flow nodes and five reusable configuration nodes. SQLite stores documents, vectors, keyword indexes and conversation history under the Node-RED user directory.
 
+New to the nodes? Open the **[complete node user guide](docs/node-user-guide.md)** for recommended flows, configuration decisions, every node option, production guidance and troubleshooting.
+
 ## Getting started
 
 1. Use Node.js 24.14+ with SQLite FTS5 support and Node-RED 5.0.10+. From the cloned package directory, run `npm pack`. From your Node-RED user directory, run `npm install /absolute/path/to/node-red-contrib-context-weave-0.1.0.tgz` and restart Node-RED.
@@ -82,12 +84,13 @@ For **POST /context-weave/ask**, wire your authenticated identity step before th
 
 ```sh
 npm ci --ignore-scripts
+npm run build
 npm run check
 npm test
 npm run coverage
 npm audit --audit-level=high
 ```
 
-Tests use a local model fixture and a temporary Node-RED instance. Each node has a runtime JS file, editor HTML and help text in `nodes/`. Shared implementations live in `lib/`. Run `node scripts/build-nodes.js` after editing field definitions. CI checks both supported Node.js release lines and enforces a minimum 70% line coverage across library code.
+Tests use a local model fixture and a temporary Node-RED instance. Each node has a runtime JS file, editor HTML and help text in `nodes/`. Shared implementations live in `lib/`. Run `npm run build` after editing field definitions or editor metadata; it regenerates both editors and the user guide. CI checks both supported Node.js release lines and enforces a minimum 70% line coverage across library code.
 
-See the [design blueprint](docs/design.md) and [implementation scope](docs/implementation.md) for the node catalogue, configuration and release boundaries. MIT licensed.
+See the [node user guide](docs/node-user-guide.md), [design blueprint](docs/design.md), and [implementation scope](docs/implementation.md) for usage, architecture and release boundaries. MIT licensed.

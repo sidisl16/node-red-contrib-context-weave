@@ -68,6 +68,18 @@ RED.nodes.registerType("context-weave-retrieve", {
   label: function () { return this.name || "retrieve"; },
   oneditprepare: function () {
     $('#node-input-libraries').val(JSON.stringify(this.libraries ?? [], null, 2));
+    const visibilityRules = {"lexicalWeight":{"field":"mode","in":["hybrid"]},"sentencesBefore":{"field":"contextMode","in":["sentences"]},"sentencesAfter":{"field":"contextMode","in":["sentences"]},"charactersBefore":{"field":"contextMode","in":["characters"]},"charactersAfter":{"field":"contextMode","in":["characters"]}};
+    const fieldValue = field => { const input = $('#node-input-' + field); return input.attr('type') === 'checkbox' ? input.prop('checked') : input.val(); };
+    const updateVisibility = () => {
+      Object.entries(visibilityRules).forEach(([field, rule]) => {
+        const value = fieldValue(rule.field);
+        const visible = rule.truthy ? value === true : rule.in ? rule.in.includes(value) : !rule.not.includes(value);
+        $('#node-input-' + field).closest('.form-row').toggle(visible);
+      });
+    };
+    $('#node-input-mode').on('change.contextWeaveVisibility', updateVisibility);
+    $('#node-input-contextMode').on('change.contextWeaveVisibility', updateVisibility);
+    updateVisibility();
   },
   oneditsave: function () {
     this.libraries = JSON.parse($('#node-input-libraries').val()); $('#node-input-libraries').remove();
@@ -84,23 +96,23 @@ RED.nodes.registerType("context-weave-retrieve", {
 </script>
 
 <script type="text/html" data-template-name="context-weave-retrieve">
-  <div class="form-row"><label for="node-input-name">name</label><input id="node-input-name" type="text"></div>
-  <div class="form-row"><label for="node-input-library">library</label><input type="text" id="node-input-library"></div>
-  <div class="form-row"><label for="node-input-libraries">libraries</label><textarea id="node-input-libraries" rows="3" style="width:70%"></textarea></div>
-  <div class="form-row"><label for="node-input-querySource">query source</label><input id="node-input-querySource" type="text"></div>
-  <div class="form-row"><label for="node-input-querySourceType">query source type</label><select id="node-input-querySourceType"><option value="msg">msg</option><option value="str">str</option><option value="flow">flow</option><option value="global">global</option><option value="env">env</option><option value="bool">bool</option><option value="num">num</option><option value="json">json</option></select></div>
-  <div class="form-row"><label for="node-input-mode">mode</label><input id="node-input-mode" type="text"></div>
-  <div class="form-row"><label for="node-input-lexicalWeight">lexical weight</label><input id="node-input-lexicalWeight" type="number" step="any"></div>
-  <div class="form-row"><label for="node-input-metadataFilter">metadata filter</label><input id="node-input-metadataFilter" type="text"></div>
-  <div class="form-row"><label for="node-input-candidateLimit">candidate limit</label><input id="node-input-candidateLimit" type="number" step="any"></div>
-  <div class="form-row"><label for="node-input-resultLimit">result limit</label><input id="node-input-resultLimit" type="number" step="any"></div>
-  <div class="form-row"><label for="node-input-offset">offset</label><input id="node-input-offset" type="number" step="any"></div>
-  <div class="form-row"><label for="node-input-contextMode">context mode</label><input id="node-input-contextMode" type="text"></div>
-  <div class="form-row"><label for="node-input-sentencesBefore">sentences before</label><input id="node-input-sentencesBefore" type="number" step="any"></div>
-  <div class="form-row"><label for="node-input-sentencesAfter">sentences after</label><input id="node-input-sentencesAfter" type="number" step="any"></div>
-  <div class="form-row"><label for="node-input-charactersBefore">characters before</label><input id="node-input-charactersBefore" type="number" step="any"></div>
-  <div class="form-row"><label for="node-input-charactersAfter">characters after</label><input id="node-input-charactersAfter" type="number" step="any"></div>
-  <div class="form-row"><label for="node-input-highlights">highlights</label><input id="node-input-highlights" type="checkbox"></div>
+  <div class="form-row" data-field="name"><label for="node-input-name" title="Optional label shown on the flow.">name</label><input id="node-input-name" type="text"></div>
+  <div class="form-row" data-field="library"><label for="node-input-library" title="Library configuration used by this operation.">library</label><input type="text" id="node-input-library"></div>
+  <div class="form-row" data-field="libraries"><label for="node-input-libraries" title="Optional JSON list of weighted library targets.">libraries</label><textarea id="node-input-libraries" rows="3" style="width:70%"></textarea></div>
+  <div class="form-row" data-field="querySource"><label for="node-input-querySource" title="Message path or typed value read at runtime.">query source</label><input id="node-input-querySource" type="text"></div>
+  <div class="form-row" data-field="querySourceType"><label for="node-input-querySourceType" title="Node-RED typed-input kind used to evaluate the adjacent source value.">query source type</label><select id="node-input-querySourceType"><option value="msg">msg</option><option value="str">str</option><option value="flow">flow</option><option value="global">global</option><option value="env">env</option><option value="bool">bool</option><option value="num">num</option><option value="json">json</option></select></div>
+  <div class="form-row" data-field="mode"><label for="node-input-mode" title="Operation or retrieval mode.">mode</label><select id="node-input-mode"><option value="hybrid">hybrid</option><option value="dense">dense</option><option value="lexical">lexical</option></select></div>
+  <div class="form-row" data-field="lexicalWeight"><label for="node-input-lexicalWeight" title="Hybrid-search weight from 0 (dense) to 1 (lexical).">lexical weight</label><input id="node-input-lexicalWeight" type="number" step="any"></div>
+  <div class="form-row" data-field="metadataFilter"><label for="node-input-metadataFilter" title="Safe metadata filter expression; raw SQL or JavaScript is never evaluated.">metadata filter</label><input id="node-input-metadataFilter" type="text"></div>
+  <div class="form-row" data-field="candidateLimit"><label for="node-input-candidateLimit" title="Candidates fetched before final limiting or reranking.">candidate limit</label><input id="node-input-candidateLimit" type="number" step="any"></div>
+  <div class="form-row" data-field="resultLimit"><label for="node-input-resultLimit" title="Maximum retrieval results.">result limit</label><input id="node-input-resultLimit" type="number" step="any"></div>
+  <div class="form-row" data-field="offset"><label for="node-input-offset" title="Number of ranked results to skip.">offset</label><input id="node-input-offset" type="number" step="any"></div>
+  <div class="form-row" data-field="contextMode"><label for="node-input-contextMode" title="Adds sentence context, character context, or no surrounding context.">context mode</label><select id="node-input-contextMode"><option value="sentences">sentences</option><option value="characters">characters</option><option value="none">none</option></select></div>
+  <div class="form-row" data-field="sentencesBefore"><label for="node-input-sentencesBefore" title="Sentences added before each matching chunk.">sentences before</label><input id="node-input-sentencesBefore" type="number" step="any"></div>
+  <div class="form-row" data-field="sentencesAfter"><label for="node-input-sentencesAfter" title="Sentences added after each matching chunk.">sentences after</label><input id="node-input-sentencesAfter" type="number" step="any"></div>
+  <div class="form-row" data-field="charactersBefore"><label for="node-input-charactersBefore" title="Characters added before each matching chunk.">characters before</label><input id="node-input-charactersBefore" type="number" step="any"></div>
+  <div class="form-row" data-field="charactersAfter"><label for="node-input-charactersAfter" title="Characters added after each matching chunk.">characters after</label><input id="node-input-charactersAfter" type="number" step="any"></div>
+  <div class="form-row" data-field="highlights"><label for="node-input-highlights" title="Include query-term character ranges.">highlights</label><input id="node-input-highlights" type="checkbox"></div>
 </script>
 
 <script type="text/html" data-help-name="context-weave-retrieve">
