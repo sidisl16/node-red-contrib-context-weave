@@ -97,13 +97,13 @@ See the [node user guide](docs/node-user-guide.md), [design blueprint](docs/desi
 
 ## Release to npm
 
-The **Publish npm package** workflow releases only from `main`, and only when `package.json` or `package-lock.json` changes. It builds, validates, tests, audits, dry-runs the package, then calls `npm publish` through npm trusted publishing (OIDC). It never uses a long-lived npm token.
+Merge a version bump in `package.json` to `main`, or manually run **Publish npm package** on `main`. A read-only job rebuilds, tests and audits the package. A separate runner publishes the verified commit with lifecycle scripts disabled and a short-lived GitHub identity. An already-published version is skipped.
 
 One-time setup is required before the first automated release:
 
-1. Make the GitHub repository public; npm provenance is unavailable for private source repositories.
+1. Keep your chosen repository visibility. Public repositories also qualify for automatic npm provenance.
 2. Publish `0.1.0` manually with `npm publish --access public`, after running the checks above.
-3. In npmjs.com, open this package’s **Settings → Trusted Publisher**, select **GitHub Actions**, and authorize repository `sidisl16/node-red-contrib-context-weave` with workflow `.github/workflows/publish.yml`. Allow direct `npm publish`.
+3. In npmjs.com, open this package’s **Settings → Trusted Publisher**, select **GitHub Actions**, and enter owner `sidisl16`, repository `node-red-contrib-context-weave` and workflow filename `publish.yml`. Leave the environment blank and allow direct `npm publish`.
 4. On `main`, increase `version` with `npm version patch`, commit the updated `package.json` and lockfile, then push. The workflow publishes that new version.
 
 After npm accepts the package, submit its npm name manually at [the Node-RED Flow Library add-node page](https://flows.nodered.org/add/node). New catalogue submissions are not automatic.
