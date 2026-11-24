@@ -1,10 +1,6 @@
 name: Publish npm package
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - package.json
   workflow_dispatch:
 
 # npm trusted publishing exchanges this short-lived GitHub OIDC identity for
