@@ -7,7 +7,7 @@ const {config,ports} = require('../lib/definitions');
 const fields = Object.assign({},config,require('../lib/ingest-fields'),require('../lib/knowledge-fields'),require('../lib/model-fields'));
 const references = {library:'library',provider:'provider',embeddingProfile:'model-profile',generationProfile:'model-profile',verifierProfile:'model-profile',rerankProfile:'model-profile',sourceProfile:'source-profile',store:'conversation-store',extractor:'provider'};
 const choices = {
-  adapter:['ollama','openai','openai-compatible','anthropic','google-gemini','huggingface-tei','cross-encoder','tika'],
+  adapter:['ollama','openai','openai-compatible','anthropic','google-gemini','huggingface-tei','cross-encoder','tika','qdrant','pgvector','chroma'],
   privacy:['local-only','allow-commercial-api','commercial-api-with-redaction'],purpose:['generation','embedding','reranking'],
   contentKind:['auto','record','file','html','markdown','text']
 };
@@ -34,7 +34,7 @@ for (const [type, props] of Object.entries(fields).sort(([a],[b])=>a.localeCompa
   }
   for (const [key, val] of Object.entries({name:'',...props})) {
     const htmlId='id="'+prefix+key+'"';
-    const ref=references[key];
+    const ref=key==='vectorProvider'?'provider':references[key];
     defaults[key]={value:val,...(ref?{type:'context-weave-'+ref,required:false}:{})};
     let options = key.endsWith('Type') && ['msg','str','flow','global','env','bool','num','json'].includes(val)
       ? ['msg','str','flow','global','env','bool','num','json'] : choices[key];

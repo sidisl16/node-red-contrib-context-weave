@@ -3,7 +3,7 @@
 [![Build](https://github.com/sidisl16/node-red-contrib-context-weave/actions/workflows/ci.yml/badge.svg?event=pull_request)](https://github.com/sidisl16/node-red-contrib-context-weave/actions/workflows/ci.yml)
 [![Quality and coverage](https://github.com/sidisl16/node-red-contrib-context-weave/actions/workflows/quality.yml/badge.svg?event=pull_request)](https://github.com/sidisl16/node-red-contrib-context-weave/actions/workflows/quality.yml)
 
-**Unit-test line coverage: 91.38%** · Run `npm run coverage:unit` to reproduce this measurement. The end-to-end Node-RED test runs separately in the full suite.
+**Unit-test line coverage: 91.05%** · Run `npm run coverage:unit` to reproduce this measurement. The end-to-end Node-RED test runs separately in the full suite.
 
 ## What is ContextWeave?
 
@@ -60,6 +60,18 @@ flowchart TD
 Try **When does the reset link expire?** The article says **30 minutes**. Expand `payload.citations` in Debug to find the document ID behind the answer.
 
 </details>
+
+## Choose a vector database
+
+SQLite is the default. For external cosine search, add a **provider** and select it in the library’s **vector provider** field.
+
+| Provider adapter | Example base URL | Setup |
+| --- | --- | --- |
+| Qdrant | `http://127.0.0.1:6333` | Enter the API key if required. ContextWeave creates cosine collections. |
+| pgvector | `postgresql://app@127.0.0.1:5432/support` | Enable `CREATE EXTENSION vector` in the database. Enter the database password in the provider credential field and grant the role permission to create its vector table. |
+| Chroma | `http://127.0.0.1:8000` | Use a Chroma v2 server with the default tenant and database. Enter its token if required. |
+
+Local-only libraries require a loopback endpoint. Other hosts require TLS and a compatible library privacy setting. Keep the SQLite user directory when using an external service. It holds document text, filters, keyword search and pending vector changes. On first use, an external provider receives existing vectors. Use a new library ID when switching between external services.
 
 ## Configure models and access
 

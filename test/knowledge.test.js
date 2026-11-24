@@ -35,6 +35,26 @@ test('imported library defaults isolate tenants and evidence carries its outboun
   await assert.rejects(ops.retrieve(ctx),{code:'POLICY'});
 });
 
+test('failed external upserts replay before retry, and deletions reach the provider',async t=>{
+  const {ctx,record}=setup(t);
+  ctx.library.options.vectorProvider='vectors';
+  ctx.RED.nodes.getNode=id=>id==='vectors'?{options:{adapter:'qdrant',baseUrl:'http://127.0.0.1:6333'}}:null;
+  let unavailable=true;
+  const points=new Map();
+  t.mock.method(global,'fetch',async (url,opts)=>{
+    const body=opts.body && JSON.parse(opts.body);
+    if(unavailable && body?.points) return new Response(null,{status:503});
+    if(url.includes('/points/delete')) for(const id of body.points) points.delete(id);
+    else if(body?.points) for(const p of body.points) points.set(p.id,p.vector);
+    if(url.endsWith('/points/query')) return Response.json({result:{points:body.filter.must[0].has_id.filter(id=>points.has(id)).map(id=>({id,score:1}))}});
+    return Response.json({result:{}});
+  });
+  await assert.rejects(record('d','apple'),{code:'UPSTREAM'});unavailable=false;
+  await record('d','apple');assert.equal(points.size,1);
+  ctx.cw.query='apple';await ops.retrieve(ctx);assert.equal(ctx.cw.evidence[0].documentId,'d');
+  ctx.cw.confirm=true;ctx.cw.documentId='d';await ops['document-delete'](ctx);assert.equal(points.size,0);
+});
+
 test('index is durable, idempotent and removes obsolete chunks and FTS entries',async t=>{
   const {ctx,record}=setup(t);
   const chunks=[{chunkId:'a',text:'password reset'},{chunkId:'b',text:'obsolete word'}];

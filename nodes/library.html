@@ -13,6 +13,11 @@ RED.nodes.registerType("context-weave-library", {
       "type": "context-weave-model-profile",
       "required": false
     },
+    "vectorProvider": {
+      "value": "",
+      "type": "context-weave-provider",
+      "required": false
+    },
     "privacy": {
       "value": "local-only"
     },
@@ -46,6 +51,7 @@ RED.nodes.registerType("context-weave-library", {
   <div class="form-row"><label for="node-config-input-name">name</label><input id="node-config-input-name" type="text"></div>
   <div class="form-row"><label for="node-config-input-libraryId">library id</label><input id="node-config-input-libraryId" type="text"></div>
   <div class="form-row"><label for="node-config-input-embeddingProfile">embedding profile</label><input type="text" id="node-config-input-embeddingProfile"></div>
+  <div class="form-row"><label for="node-config-input-vectorProvider">vector provider</label><input type="text" id="node-config-input-vectorProvider"></div>
   <div class="form-row"><label for="node-config-input-privacy">privacy</label><select id="node-config-input-privacy"><option value="local-only">local-only</option><option value="allow-commercial-api">allow-commercial-api</option><option value="commercial-api-with-redaction">commercial-api-with-redaction</option></select></div>
   <div class="form-row"><label for="node-config-input-filterAttributes">filter attributes</label><textarea id="node-config-input-filterAttributes" rows="3" style="width:70%"></textarea></div>
   <div class="form-row"><label for="node-config-input-accessPolicy">access policy</label><textarea id="node-config-input-accessPolicy" rows="3" style="width:70%"></textarea></div>

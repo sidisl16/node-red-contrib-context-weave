@@ -72,5 +72,8 @@
       "context-weave-source-profile": "nodes/source-profile.js",
       "context-weave-split": "nodes/split.js"
     }
+  },
+  "dependencies": {
+    "pg": "8.23.1"
   }
 }
