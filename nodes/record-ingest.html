@@ -1,0 +1,59 @@
+<script type="text/javascript">
+RED.nodes.registerType("context-weave-record-ingest", {
+  "category": "context weave",
+  "defaults": {
+    "name": {
+      "value": ""
+    },
+    "documentSource": {
+      "value": ""
+    },
+    "documentSourceType": {
+      "value": "msg"
+    },
+    "idPath": {
+      "value": "id"
+    },
+    "titlePath": {
+      "value": "title"
+    },
+    "textPath": {
+      "value": "text"
+    },
+    "metadataPath": {
+      "value": "metadata"
+    }
+  },
+  "color": "#b2d5cc",
+  "inputs": 1,
+  "outputs": 2,
+  "outputLabels": [
+    "success",
+    "error"
+  ],
+  "icon": "font-awesome/fa-book",
+  label: function () { return this.name || "record-ingest"; },
+  oneditprepare: function () {
+
+  },
+  oneditsave: function () {
+
+  }
+});
+</script>
+
+<script type="text/html" data-template-name="context-weave-record-ingest">
+  <div class="form-row"><label for="node-input-name">name</label><input id="node-input-name" type="text"></div>
+  <div class="form-row"><label for="node-input-documentSource">document source</label><input id="node-input-documentSource" type="text"></div>
+  <div class="form-row"><label for="node-input-documentSourceType">document source type</label><select id="node-input-documentSourceType"><option value="msg">msg</option><option value="str">str</option><option value="flow">flow</option><option value="global">global</option><option value="env">env</option><option value="bool">bool</option><option value="num">num</option><option value="json">json</option></select></div>
+  <div class="form-row"><label for="node-input-idPath">id path</label><input id="node-input-idPath" type="text"></div>
+  <div class="form-row"><label for="node-input-titlePath">title path</label><input id="node-input-titlePath" type="text"></div>
+  <div class="form-row"><label for="node-input-textPath">text path</label><input id="node-input-textPath" type="text"></div>
+  <div class="form-row"><label for="node-input-metadataPath">metadata path</label><input id="node-input-metadataPath" type="text"></div>
+</script>
+
+<script type="text/html" data-help-name="context-weave-record-ingest">
+  <p>Normalizes structured source. Use when caller controls document/section boundaries.</p>
+  <p><b>Input</b> `msg.payload` or `msg.contextWeave.input.document` matching `DocumentInput`</p>
+  <p><b>Output</b> indexed document report</p>
+</script>

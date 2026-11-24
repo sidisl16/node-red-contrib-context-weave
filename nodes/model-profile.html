@@ -1,0 +1,90 @@
+<script type="text/javascript">
+RED.nodes.registerType("context-weave-model-profile", {
+  "category": "config",
+  "defaults": {
+    "name": {
+      "value": ""
+    },
+    "provider": {
+      "value": "",
+      "type": "context-weave-provider",
+      "required": false
+    },
+    "purpose": {
+      "value": "generation"
+    },
+    "model": {
+      "value": ""
+    },
+    "privacy": {
+      "value": "local-only"
+    },
+    "temperature": {
+      "value": 0.2
+    },
+    "maxOutputTokens": {
+      "value": 900
+    },
+    "maxContextChars": {
+      "value": 24000
+    },
+    "batchSize": {
+      "value": 32
+    },
+    "revision": {
+      "value": "1"
+    },
+    "dimensions": {
+      "value": 0
+    },
+    "topP": {
+      "value": ""
+    },
+    "normalization": {
+      "value": "none"
+    },
+    "fallbackProfiles": {
+      "value": []
+    },
+    "failInsteadOfFallback": {
+      "value": false
+    }
+  },
+  label: function () { return this.name || "model-profile"; },
+  oneditprepare: function () {
+    $('#node-config-input-fallbackProfiles').val(JSON.stringify(this.fallbackProfiles ?? [], null, 2));
+  },
+  oneditsave: function () {
+    this.fallbackProfiles = JSON.parse($('#node-config-input-fallbackProfiles').val()); $('#node-config-input-fallbackProfiles').remove();
+    this.temperature = Number($('#node-config-input-temperature').val()); $('#node-config-input-temperature').remove();
+    this.maxOutputTokens = Number($('#node-config-input-maxOutputTokens').val()); $('#node-config-input-maxOutputTokens').remove();
+    this.maxContextChars = Number($('#node-config-input-maxContextChars').val()); $('#node-config-input-maxContextChars').remove();
+    this.batchSize = Number($('#node-config-input-batchSize').val()); $('#node-config-input-batchSize').remove();
+    this.dimensions = Number($('#node-config-input-dimensions').val()); $('#node-config-input-dimensions').remove();
+  }
+});
+</script>
+
+<script type="text/html" data-template-name="context-weave-model-profile">
+  <div class="form-row"><label for="node-config-input-name">name</label><input id="node-config-input-name" type="text"></div>
+  <div class="form-row"><label for="node-config-input-provider">provider</label><input type="text" id="node-config-input-provider"></div>
+  <div class="form-row"><label for="node-config-input-purpose">purpose</label><select id="node-config-input-purpose"><option value="generation">generation</option><option value="embedding">embedding</option><option value="reranking">reranking</option></select></div>
+  <div class="form-row"><label for="node-config-input-model">model</label><input id="node-config-input-model" type="text"></div>
+  <div class="form-row"><label for="node-config-input-privacy">privacy</label><select id="node-config-input-privacy"><option value="local-only">local-only</option><option value="allow-commercial-api">allow-commercial-api</option><option value="commercial-api-with-redaction">commercial-api-with-redaction</option></select></div>
+  <div class="form-row"><label for="node-config-input-temperature">temperature</label><input id="node-config-input-temperature" type="number" step="any"></div>
+  <div class="form-row"><label for="node-config-input-maxOutputTokens">max output tokens</label><input id="node-config-input-maxOutputTokens" type="number" step="any"></div>
+  <div class="form-row"><label for="node-config-input-maxContextChars">max context chars</label><input id="node-config-input-maxContextChars" type="number" step="any"></div>
+  <div class="form-row"><label for="node-config-input-batchSize">batch size</label><input id="node-config-input-batchSize" type="number" step="any"></div>
+  <div class="form-row"><label for="node-config-input-revision">revision</label><input id="node-config-input-revision" type="text"></div>
+  <div class="form-row"><label for="node-config-input-dimensions">dimensions</label><input id="node-config-input-dimensions" type="number" step="any"></div>
+  <div class="form-row"><label for="node-config-input-topP">top p</label><input id="node-config-input-topP" type="text"></div>
+  <div class="form-row"><label for="node-config-input-normalization">normalization</label><input id="node-config-input-normalization" type="text"></div>
+  <div class="form-row"><label for="node-config-input-fallbackProfiles">fallback profiles</label><textarea id="node-config-input-fallbackProfiles" rows="3" style="width:70%"></textarea></div>
+  <div class="form-row"><label for="node-config-input-failInsteadOfFallback">fail instead of fallback</label><input id="node-config-input-failInsteadOfFallback" type="checkbox"></div>
+</script>
+
+<script type="text/html" data-help-name="context-weave-model-profile">
+  <p>Reusable model profile configuration.</p>
+  <p><b>Input</b> Selected by dependent nodes</p>
+  <p><b>Output</b> Referenced configuration</p>
+</script>

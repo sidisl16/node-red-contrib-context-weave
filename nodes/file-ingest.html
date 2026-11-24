@@ -1,0 +1,100 @@
+<script type="text/javascript">
+RED.nodes.registerType("context-weave-file-ingest", {
+  "category": "context weave",
+  "defaults": {
+    "name": {
+      "value": ""
+    },
+    "library": {
+      "value": "",
+      "type": "context-weave-library",
+      "required": false
+    },
+    "parserRoute": {
+      "value": "auto"
+    },
+    "extractor": {
+      "value": "",
+      "type": "context-weave-provider",
+      "required": false
+    },
+    "maxFileMb": {
+      "value": 10
+    },
+    "timeoutSeconds": {
+      "value": 60
+    },
+    "fileSource": {
+      "value": "payload"
+    },
+    "fileSourceType": {
+      "value": "msg"
+    },
+    "documentIdSource": {
+      "value": ""
+    },
+    "documentIdSourceType": {
+      "value": "msg"
+    },
+    "metadataSource": {
+      "value": ""
+    },
+    "metadataSourceType": {
+      "value": "msg"
+    },
+    "filenameSource": {
+      "value": ""
+    },
+    "filenameSourceType": {
+      "value": "msg"
+    },
+    "mimeTypeSource": {
+      "value": ""
+    },
+    "mimeTypeSourceType": {
+      "value": "msg"
+    }
+  },
+  "color": "#b2d5cc",
+  "inputs": 1,
+  "outputs": 2,
+  "outputLabels": [
+    "success",
+    "error"
+  ],
+  "icon": "font-awesome/fa-book",
+  label: function () { return this.name || "file-ingest"; },
+  oneditprepare: function () {
+
+  },
+  oneditsave: function () {
+    this.maxFileMb = Number($('#node-input-maxFileMb').val()); $('#node-input-maxFileMb').remove();
+    this.timeoutSeconds = Number($('#node-input-timeoutSeconds').val()); $('#node-input-timeoutSeconds').remove();
+  }
+});
+</script>
+
+<script type="text/html" data-template-name="context-weave-file-ingest">
+  <div class="form-row"><label for="node-input-name">name</label><input id="node-input-name" type="text"></div>
+  <div class="form-row"><label for="node-input-library">library</label><input type="text" id="node-input-library"></div>
+  <div class="form-row"><label for="node-input-parserRoute">parser route</label><input id="node-input-parserRoute" type="text"></div>
+  <div class="form-row"><label for="node-input-extractor">extractor</label><input type="text" id="node-input-extractor"></div>
+  <div class="form-row"><label for="node-input-maxFileMb">max file mb</label><input id="node-input-maxFileMb" type="number" step="any"></div>
+  <div class="form-row"><label for="node-input-timeoutSeconds">timeout seconds</label><input id="node-input-timeoutSeconds" type="number" step="any"></div>
+  <div class="form-row"><label for="node-input-fileSource">file source</label><input id="node-input-fileSource" type="text"></div>
+  <div class="form-row"><label for="node-input-fileSourceType">file source type</label><select id="node-input-fileSourceType"><option value="msg">msg</option><option value="str">str</option><option value="flow">flow</option><option value="global">global</option><option value="env">env</option><option value="bool">bool</option><option value="num">num</option><option value="json">json</option></select></div>
+  <div class="form-row"><label for="node-input-documentIdSource">document id source</label><input id="node-input-documentIdSource" type="text"></div>
+  <div class="form-row"><label for="node-input-documentIdSourceType">document id source type</label><select id="node-input-documentIdSourceType"><option value="msg">msg</option><option value="str">str</option><option value="flow">flow</option><option value="global">global</option><option value="env">env</option><option value="bool">bool</option><option value="num">num</option><option value="json">json</option></select></div>
+  <div class="form-row"><label for="node-input-metadataSource">metadata source</label><input id="node-input-metadataSource" type="text"></div>
+  <div class="form-row"><label for="node-input-metadataSourceType">metadata source type</label><select id="node-input-metadataSourceType"><option value="msg">msg</option><option value="str">str</option><option value="flow">flow</option><option value="global">global</option><option value="env">env</option><option value="bool">bool</option><option value="num">num</option><option value="json">json</option></select></div>
+  <div class="form-row"><label for="node-input-filenameSource">filename source</label><input id="node-input-filenameSource" type="text"></div>
+  <div class="form-row"><label for="node-input-filenameSourceType">filename source type</label><select id="node-input-filenameSourceType"><option value="msg">msg</option><option value="str">str</option><option value="flow">flow</option><option value="global">global</option><option value="env">env</option><option value="bool">bool</option><option value="num">num</option><option value="json">json</option></select></div>
+  <div class="form-row"><label for="node-input-mimeTypeSource">mime type source</label><input id="node-input-mimeTypeSource" type="text"></div>
+  <div class="form-row"><label for="node-input-mimeTypeSourceType">mime type source type</label><select id="node-input-mimeTypeSourceType"><option value="msg">msg</option><option value="str">str</option><option value="flow">flow</option><option value="global">global</option><option value="env">env</option><option value="bool">bool</option><option value="num">num</option><option value="json">json</option></select></div>
+</script>
+
+<script type="text/html" data-help-name="context-weave-file-ingest">
+  <p>Extracts text/tables where adapter supports it, preserves supplied metadata, then submits to pipeline. Enforce configurable file/parse-time limits.</p>
+  <p><b>Input</b> `msg.payload` Buffer/path (if runtime permits) or `{data, filename, mimeType}`</p>
+  <p><b>Output</b> indexed document report</p>
+</script>

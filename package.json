@@ -1,0 +1,75 @@
+{
+  "name": "node-red-contrib-context-weave",
+  "version": "0.1.0",
+  "description": "Connector-first retrieval and grounded answers for Node-RED",
+  "license": "MIT",
+  "repository": "github:sidisl16/node-red-contrib-context-weave",
+  "engines": {
+    "node": ">=24.14.0"
+  },
+  "keywords": [
+    "node-red",
+    "rag",
+    "retrieval"
+  ],
+  "files": [
+    "nodes",
+    "lib",
+    "examples",
+    "docs",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node --test",
+    "coverage": "node --test --experimental-test-coverage --test-coverage-include='lib/**/*.js' --test-coverage-lines=70",
+    "check": "node scripts/verify-package.js"
+  },
+  "devDependencies": {
+    "node-red": "5.0.10"
+  },
+  "node-red": {
+    "version": ">=5.0.10",
+    "nodes": {
+      "context-weave-agent-run": "nodes/agent-run.js",
+      "context-weave-agent-tool": "nodes/agent-tool.js",
+      "context-weave-answer": "nodes/answer.js",
+      "context-weave-cite": "nodes/cite.js",
+      "context-weave-context": "nodes/context.js",
+      "context-weave-conversation-delete": "nodes/conversation-delete.js",
+      "context-weave-conversation-open": "nodes/conversation-open.js",
+      "context-weave-conversation-read": "nodes/conversation-read.js",
+      "context-weave-conversation-store": "nodes/conversation-store.js",
+      "context-weave-conversation-turn": "nodes/conversation-turn.js",
+      "context-weave-document-delete": "nodes/document-delete.js",
+      "context-weave-document-get": "nodes/document-get.js",
+      "context-weave-document-list": "nodes/document-list.js",
+      "context-weave-document-patch": "nodes/document-patch.js",
+      "context-weave-document-replace-metadata": "nodes/document-replace-metadata.js",
+      "context-weave-document-summarize": "nodes/document-summarize.js",
+      "context-weave-fact-check": "nodes/fact-check.js",
+      "context-weave-file-ingest": "nodes/file-ingest.js",
+      "context-weave-filter": "nodes/filter.js",
+      "context-weave-format-evidence": "nodes/format-evidence.js",
+      "context-weave-generate": "nodes/generate.js",
+      "context-weave-index": "nodes/index.js",
+      "context-weave-library": "nodes/library.js",
+      "context-weave-library-create": "nodes/library-create.js",
+      "context-weave-library-delete": "nodes/library-delete.js",
+      "context-weave-library-info": "nodes/library-info.js",
+      "context-weave-library-list": "nodes/library-list.js",
+      "context-weave-library-reset": "nodes/library-reset.js",
+      "context-weave-library-update": "nodes/library-update.js",
+      "context-weave-model-profile": "nodes/model-profile.js",
+      "context-weave-parse-content": "nodes/parse-content.js",
+      "context-weave-provider": "nodes/provider.js",
+      "context-weave-query-history": "nodes/query-history.js",
+      "context-weave-record-ingest": "nodes/record-ingest.js",
+      "context-weave-rerank": "nodes/rerank.js",
+      "context-weave-retrieve": "nodes/retrieve.js",
+      "context-weave-source-map": "nodes/source-map.js",
+      "context-weave-source-profile": "nodes/source-profile.js",
+      "context-weave-split": "nodes/split.js"
+    }
+  }
+}

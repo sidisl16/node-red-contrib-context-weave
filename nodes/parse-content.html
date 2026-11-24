@@ -1,0 +1,67 @@
+<script type="text/javascript">
+RED.nodes.registerType("context-weave-parse-content", {
+  "category": "context weave",
+  "defaults": {
+    "name": {
+      "value": ""
+    },
+    "parserRoute": {
+      "value": "auto"
+    },
+    "extractor": {
+      "value": "",
+      "type": "context-weave-provider",
+      "required": false
+    },
+    "maxFileMb": {
+      "value": 10
+    },
+    "timeoutSeconds": {
+      "value": 60
+    },
+    "sourceEnvelope": {
+      "value": "contextWeave.source"
+    },
+    "sourceEnvelopeType": {
+      "value": "msg"
+    },
+    "outputProperty": {
+      "value": "contextWeave.input.document"
+    }
+  },
+  "color": "#b2d5cc",
+  "inputs": 1,
+  "outputs": 3,
+  "outputLabels": [
+    "parsed",
+    "custom parser",
+    "error"
+  ],
+  "icon": "font-awesome/fa-book",
+  label: function () { return this.name || "parse-content"; },
+  oneditprepare: function () {
+
+  },
+  oneditsave: function () {
+    this.maxFileMb = Number($('#node-input-maxFileMb').val()); $('#node-input-maxFileMb').remove();
+    this.timeoutSeconds = Number($('#node-input-timeoutSeconds').val()); $('#node-input-timeoutSeconds').remove();
+  }
+});
+</script>
+
+<script type="text/html" data-template-name="context-weave-parse-content">
+  <div class="form-row"><label for="node-input-name">name</label><input id="node-input-name" type="text"></div>
+  <div class="form-row"><label for="node-input-parserRoute">parser route</label><input id="node-input-parserRoute" type="text"></div>
+  <div class="form-row"><label for="node-input-extractor">extractor</label><input type="text" id="node-input-extractor"></div>
+  <div class="form-row"><label for="node-input-maxFileMb">max file mb</label><input id="node-input-maxFileMb" type="number" step="any"></div>
+  <div class="form-row"><label for="node-input-timeoutSeconds">timeout seconds</label><input id="node-input-timeoutSeconds" type="number" step="any"></div>
+  <div class="form-row"><label for="node-input-sourceEnvelope">source envelope</label><input id="node-input-sourceEnvelope" type="text"></div>
+  <div class="form-row"><label for="node-input-sourceEnvelopeType">source envelope type</label><select id="node-input-sourceEnvelopeType"><option value="msg">msg</option><option value="str">str</option><option value="flow">flow</option><option value="global">global</option><option value="env">env</option><option value="bool">bool</option><option value="num">num</option><option value="json">json</option></select></div>
+  <div class="form-row"><label for="node-input-outputProperty">output property</label><input id="node-input-outputProperty" type="text"></div>
+</script>
+
+<script type="text/html" data-help-name="context-weave-parse-content">
+  <p>Extracts text, tables, page/section locators, and parser warnings through the chosen parser route.</p>
+  <p><b>Input</b> normalized source envelope containing a file, HTML, Markdown, or text</p>
+  <p><b>Output</b> parsed document/sections</p>
+</script>

@@ -1,0 +1,64 @@
+<script type="text/javascript">
+RED.nodes.registerType("context-weave-split", {
+  "category": "context weave",
+  "defaults": {
+    "name": {
+      "value": ""
+    },
+    "documentSource": {
+      "value": ""
+    },
+    "documentSourceType": {
+      "value": "msg"
+    },
+    "strategy": {
+      "value": "sentence-window"
+    },
+    "targetTokens": {
+      "value": 800
+    },
+    "overlapTokens": {
+      "value": 120
+    },
+    "customRegex": {
+      "value": ""
+    },
+    "outputProperty": {
+      "value": "contextWeave.input.chunks"
+    }
+  },
+  "color": "#b2d5cc",
+  "inputs": 1,
+  "outputs": 2,
+  "outputLabels": [
+    "success",
+    "error"
+  ],
+  "icon": "font-awesome/fa-book",
+  label: function () { return this.name || "split"; },
+  oneditprepare: function () {
+
+  },
+  oneditsave: function () {
+    this.targetTokens = Number($('#node-input-targetTokens').val()); $('#node-input-targetTokens').remove();
+    this.overlapTokens = Number($('#node-input-overlapTokens').val()); $('#node-input-overlapTokens').remove();
+  }
+});
+</script>
+
+<script type="text/html" data-template-name="context-weave-split">
+  <div class="form-row"><label for="node-input-name">name</label><input id="node-input-name" type="text"></div>
+  <div class="form-row"><label for="node-input-documentSource">document source</label><input id="node-input-documentSource" type="text"></div>
+  <div class="form-row"><label for="node-input-documentSourceType">document source type</label><select id="node-input-documentSourceType"><option value="msg">msg</option><option value="str">str</option><option value="flow">flow</option><option value="global">global</option><option value="env">env</option><option value="bool">bool</option><option value="num">num</option><option value="json">json</option></select></div>
+  <div class="form-row"><label for="node-input-strategy">strategy</label><input id="node-input-strategy" type="text"></div>
+  <div class="form-row"><label for="node-input-targetTokens">target tokens</label><input id="node-input-targetTokens" type="number" step="any"></div>
+  <div class="form-row"><label for="node-input-overlapTokens">overlap tokens</label><input id="node-input-overlapTokens" type="number" step="any"></div>
+  <div class="form-row"><label for="node-input-customRegex">custom regex</label><input id="node-input-customRegex" type="text"></div>
+  <div class="form-row"><label for="node-input-outputProperty">output property</label><input id="node-input-outputProperty" type="text"></div>
+</script>
+
+<script type="text/html" data-help-name="context-weave-split">
+  <p>Deterministic splitter. Modes: sentence-window, token-window, paragraph, section, markdown headings, custom regex. Never span a section boundary by default. Persist splitter version/config.</p>
+  <p><b>Input</b> normalized document</p>
+  <p><b>Output</b> document plus chunks</p>
+</script>

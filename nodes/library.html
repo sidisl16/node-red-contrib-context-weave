@@ -1,0 +1,59 @@
+<script type="text/javascript">
+RED.nodes.registerType("context-weave-library", {
+  "category": "config",
+  "defaults": {
+    "name": {
+      "value": ""
+    },
+    "libraryId": {
+      "value": "support-kb"
+    },
+    "embeddingProfile": {
+      "value": "",
+      "type": "context-weave-model-profile",
+      "required": false
+    },
+    "privacy": {
+      "value": "local-only"
+    },
+    "filterAttributes": {
+      "value": []
+    },
+    "accessPolicy": {
+      "value": {
+        "mode": "tenant-field",
+        "metadataField": "tenant_id",
+        "claimProperty": "auth.tenantId"
+      }
+    },
+    "allowDestructive": {
+      "value": false
+    }
+  },
+  label: function () { return this.name || "library"; },
+  oneditprepare: function () {
+    $('#node-config-input-filterAttributes').val(JSON.stringify(this.filterAttributes ?? [], null, 2));
+    $('#node-config-input-accessPolicy').val(JSON.stringify(this.accessPolicy ?? {"mode":"tenant-field","metadataField":"tenant_id","claimProperty":"auth.tenantId"}, null, 2));
+  },
+  oneditsave: function () {
+    this.filterAttributes = JSON.parse($('#node-config-input-filterAttributes').val()); $('#node-config-input-filterAttributes').remove();
+    this.accessPolicy = JSON.parse($('#node-config-input-accessPolicy').val()); $('#node-config-input-accessPolicy').remove();
+  }
+});
+</script>
+
+<script type="text/html" data-template-name="context-weave-library">
+  <div class="form-row"><label for="node-config-input-name">name</label><input id="node-config-input-name" type="text"></div>
+  <div class="form-row"><label for="node-config-input-libraryId">library id</label><input id="node-config-input-libraryId" type="text"></div>
+  <div class="form-row"><label for="node-config-input-embeddingProfile">embedding profile</label><input type="text" id="node-config-input-embeddingProfile"></div>
+  <div class="form-row"><label for="node-config-input-privacy">privacy</label><select id="node-config-input-privacy"><option value="local-only">local-only</option><option value="allow-commercial-api">allow-commercial-api</option><option value="commercial-api-with-redaction">commercial-api-with-redaction</option></select></div>
+  <div class="form-row"><label for="node-config-input-filterAttributes">filter attributes</label><textarea id="node-config-input-filterAttributes" rows="3" style="width:70%"></textarea></div>
+  <div class="form-row"><label for="node-config-input-accessPolicy">access policy</label><textarea id="node-config-input-accessPolicy" rows="3" style="width:70%"></textarea></div>
+  <div class="form-row"><label for="node-config-input-allowDestructive">allow destructive</label><input id="node-config-input-allowDestructive" type="checkbox"></div>
+</script>
+
+<script type="text/html" data-help-name="context-weave-library">
+  <p>Reusable library configuration.</p>
+  <p><b>Input</b> Selected by dependent nodes</p>
+  <p><b>Output</b> Referenced configuration</p>
+</script>

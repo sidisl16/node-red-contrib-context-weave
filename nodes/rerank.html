@@ -1,0 +1,88 @@
+<script type="text/javascript">
+RED.nodes.registerType("context-weave-rerank", {
+  "category": "context weave",
+  "defaults": {
+    "name": {
+      "value": ""
+    },
+    "querySource": {
+      "value": "contextWeave.query"
+    },
+    "querySourceType": {
+      "value": "msg"
+    },
+    "evidenceSource": {
+      "value": "contextWeave.evidence"
+    },
+    "evidenceSourceType": {
+      "value": "msg"
+    },
+    "strategy": {
+      "value": "mmr"
+    },
+    "stages": {
+      "value": []
+    },
+    "rerankProfile": {
+      "value": "",
+      "type": "context-weave-model-profile",
+      "required": false
+    },
+    "diversityBias": {
+      "value": 0.3
+    },
+    "limit": {
+      "value": 10
+    },
+    "cutoff": {
+      "value": ""
+    },
+    "field": {
+      "value": ""
+    },
+    "boost": {
+      "value": 1
+    }
+  },
+  "color": "#b2d5cc",
+  "inputs": 1,
+  "outputs": 2,
+  "outputLabels": [
+    "success",
+    "error"
+  ],
+  "icon": "font-awesome/fa-book",
+  label: function () { return this.name || "rerank"; },
+  oneditprepare: function () {
+    $('#node-input-stages').val(JSON.stringify(this.stages ?? [], null, 2));
+  },
+  oneditsave: function () {
+    this.stages = JSON.parse($('#node-input-stages').val()); $('#node-input-stages').remove();
+    this.diversityBias = Number($('#node-input-diversityBias').val()); $('#node-input-diversityBias').remove();
+    this.limit = Number($('#node-input-limit').val()); $('#node-input-limit').remove();
+    this.boost = Number($('#node-input-boost').val()); $('#node-input-boost').remove();
+  }
+});
+</script>
+
+<script type="text/html" data-template-name="context-weave-rerank">
+  <div class="form-row"><label for="node-input-name">name</label><input id="node-input-name" type="text"></div>
+  <div class="form-row"><label for="node-input-querySource">query source</label><input id="node-input-querySource" type="text"></div>
+  <div class="form-row"><label for="node-input-querySourceType">query source type</label><select id="node-input-querySourceType"><option value="msg">msg</option><option value="str">str</option><option value="flow">flow</option><option value="global">global</option><option value="env">env</option><option value="bool">bool</option><option value="num">num</option><option value="json">json</option></select></div>
+  <div class="form-row"><label for="node-input-evidenceSource">evidence source</label><input id="node-input-evidenceSource" type="text"></div>
+  <div class="form-row"><label for="node-input-evidenceSourceType">evidence source type</label><select id="node-input-evidenceSourceType"><option value="msg">msg</option><option value="str">str</option><option value="flow">flow</option><option value="global">global</option><option value="env">env</option><option value="bool">bool</option><option value="num">num</option><option value="json">json</option></select></div>
+  <div class="form-row"><label for="node-input-strategy">strategy</label><input id="node-input-strategy" type="text"></div>
+  <div class="form-row"><label for="node-input-stages">stages</label><textarea id="node-input-stages" rows="3" style="width:70%"></textarea></div>
+  <div class="form-row"><label for="node-input-rerankProfile">rerank profile</label><input type="text" id="node-input-rerankProfile"></div>
+  <div class="form-row"><label for="node-input-diversityBias">diversity bias</label><input id="node-input-diversityBias" type="number" step="any"></div>
+  <div class="form-row"><label for="node-input-limit">limit</label><input id="node-input-limit" type="number" step="any"></div>
+  <div class="form-row"><label for="node-input-cutoff">cutoff</label><input id="node-input-cutoff" type="text"></div>
+  <div class="form-row"><label for="node-input-field">field</label><input id="node-input-field" type="text"></div>
+  <div class="form-row"><label for="node-input-boost">boost</label><input id="node-input-boost" type="number" step="any"></div>
+</script>
+
+<script type="text/html" data-help-name="context-weave-rerank">
+  <p>Applies one strategy or ordered strategy chain. Preserve prior scores.</p>
+  <p><b>Input</b> query + evidence</p>
+  <p><b>Output</b> reordered evidence</p>
+</script>

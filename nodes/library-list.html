@@ -1,0 +1,58 @@
+<script type="text/javascript">
+RED.nodes.registerType("context-weave-library-list", {
+  "category": "context weave",
+  "defaults": {
+    "name": {
+      "value": ""
+    },
+    "library": {
+      "value": "",
+      "type": "context-weave-library",
+      "required": false
+    },
+    "libraries": {
+      "value": []
+    },
+    "pageSize": {
+      "value": 50
+    },
+    "cursorSource": {
+      "value": "contextWeave.cursor"
+    },
+    "cursorSourceType": {
+      "value": "msg"
+    }
+  },
+  "color": "#b2d5cc",
+  "inputs": 1,
+  "outputs": 2,
+  "outputLabels": [
+    "success",
+    "error"
+  ],
+  "icon": "font-awesome/fa-book",
+  label: function () { return this.name || "library-list"; },
+  oneditprepare: function () {
+    $('#node-input-libraries').val(JSON.stringify(this.libraries ?? [], null, 2));
+  },
+  oneditsave: function () {
+    this.libraries = JSON.parse($('#node-input-libraries').val()); $('#node-input-libraries').remove();
+    this.pageSize = Number($('#node-input-pageSize').val()); $('#node-input-pageSize').remove();
+  }
+});
+</script>
+
+<script type="text/html" data-template-name="context-weave-library-list">
+  <div class="form-row"><label for="node-input-name">name</label><input id="node-input-name" type="text"></div>
+  <div class="form-row"><label for="node-input-library">library</label><input type="text" id="node-input-library"></div>
+  <div class="form-row"><label for="node-input-libraries">libraries</label><textarea id="node-input-libraries" rows="3" style="width:70%"></textarea></div>
+  <div class="form-row"><label for="node-input-pageSize">page size</label><input id="node-input-pageSize" type="number" step="any"></div>
+  <div class="form-row"><label for="node-input-cursorSource">cursor source</label><input id="node-input-cursorSource" type="text"></div>
+  <div class="form-row"><label for="node-input-cursorSourceType">cursor source type</label><select id="node-input-cursorSourceType"><option value="msg">msg</option><option value="str">str</option><option value="flow">flow</option><option value="global">global</option><option value="env">env</option><option value="bool">bool</option><option value="num">num</option><option value="json">json</option></select></div>
+</script>
+
+<script type="text/html" data-help-name="context-weave-library-list">
+  <p>Lists only libraries allowed by configured server policy.</p>
+  <p><b>Input</b> filters/pagination</p>
+  <p><b>Output</b> `msg.contextWeave.libraries`</p>
+</script>

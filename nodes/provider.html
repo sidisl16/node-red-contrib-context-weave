@@ -1,0 +1,45 @@
+<script type="text/javascript">
+RED.nodes.registerType("context-weave-provider", {
+  "category": "config",
+  "defaults": {
+    "name": {
+      "value": ""
+    },
+    "adapter": {
+      "value": "ollama"
+    },
+    "baseUrl": {
+      "value": "http://localhost:11434"
+    },
+    "timeoutMs": {
+      "value": 60000
+    }
+  },
+  "credentials": {
+    "apiKey": {
+      "type": "password"
+    }
+  },
+  label: function () { return this.name || "provider"; },
+  oneditprepare: function () {
+
+  },
+  oneditsave: function () {
+    this.timeoutMs = Number($('#node-config-input-timeoutMs').val()); $('#node-config-input-timeoutMs').remove();
+  }
+});
+</script>
+
+<script type="text/html" data-template-name="context-weave-provider">
+  <div class="form-row"><label for="node-config-input-name">name</label><input id="node-config-input-name" type="text"></div>
+  <div class="form-row"><label for="node-config-input-adapter">adapter</label><select id="node-config-input-adapter"><option value="ollama">ollama</option><option value="openai">openai</option><option value="openai-compatible">openai-compatible</option><option value="anthropic">anthropic</option><option value="google-gemini">google-gemini</option><option value="huggingface-tei">huggingface-tei</option><option value="cross-encoder">cross-encoder</option><option value="tika">tika</option></select></div>
+  <div class="form-row"><label for="node-config-input-baseUrl">base url</label><input id="node-config-input-baseUrl" type="text"></div>
+  <div class="form-row"><label for="node-config-input-timeoutMs">timeout ms</label><input id="node-config-input-timeoutMs" type="number" step="any"></div>
+  <div class="form-row"><label for="node-config-input-apiKey">api key</label><input id="node-config-input-apiKey" type="password" autocomplete="new-password"></div>
+</script>
+
+<script type="text/html" data-help-name="context-weave-provider">
+  <p>Reusable provider configuration.</p>
+  <p><b>Input</b> Selected by dependent nodes</p>
+  <p><b>Output</b> Referenced configuration</p>
+</script>

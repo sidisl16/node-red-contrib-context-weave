@@ -1,0 +1,115 @@
+<script type="text/javascript">
+RED.nodes.registerType("context-weave-source-profile", {
+  "category": "config",
+  "defaults": {
+    "name": {
+      "value": ""
+    },
+    "sourceSystem": {
+      "value": ""
+    },
+    "itemIdSource": {
+      "value": ""
+    },
+    "itemIdSourceType": {
+      "value": "msg"
+    },
+    "contentSource": {
+      "value": ""
+    },
+    "contentSourceType": {
+      "value": "msg"
+    },
+    "contentKind": {
+      "value": "auto"
+    },
+    "metadataSource": {
+      "value": ""
+    },
+    "metadataSourceType": {
+      "value": "msg"
+    },
+    "uriSource": {
+      "value": ""
+    },
+    "uriSourceType": {
+      "value": "msg"
+    },
+    "filenameSource": {
+      "value": ""
+    },
+    "filenameSourceType": {
+      "value": "msg"
+    },
+    "mimeTypeSource": {
+      "value": ""
+    },
+    "mimeTypeSourceType": {
+      "value": "msg"
+    },
+    "titleSource": {
+      "value": ""
+    },
+    "titleSourceType": {
+      "value": "msg"
+    },
+    "modifiedAtSource": {
+      "value": ""
+    },
+    "modifiedAtSourceType": {
+      "value": "msg"
+    },
+    "checkpointSource": {
+      "value": ""
+    },
+    "checkpointSourceType": {
+      "value": "msg"
+    },
+    "operation": {
+      "value": ""
+    },
+    "operationType": {
+      "value": "str"
+    }
+  },
+  label: function () { return this.name || "source-profile"; },
+  oneditprepare: function () {
+
+  },
+  oneditsave: function () {
+
+  }
+});
+</script>
+
+<script type="text/html" data-template-name="context-weave-source-profile">
+  <div class="form-row"><label for="node-config-input-name">name</label><input id="node-config-input-name" type="text"></div>
+  <div class="form-row"><label for="node-config-input-sourceSystem">source system</label><input id="node-config-input-sourceSystem" type="text"></div>
+  <div class="form-row"><label for="node-config-input-itemIdSource">item id source</label><input id="node-config-input-itemIdSource" type="text"></div>
+  <div class="form-row"><label for="node-config-input-itemIdSourceType">item id source type</label><select id="node-config-input-itemIdSourceType"><option value="msg">msg</option><option value="str">str</option><option value="flow">flow</option><option value="global">global</option><option value="env">env</option><option value="bool">bool</option><option value="num">num</option><option value="json">json</option></select></div>
+  <div class="form-row"><label for="node-config-input-contentSource">content source</label><input id="node-config-input-contentSource" type="text"></div>
+  <div class="form-row"><label for="node-config-input-contentSourceType">content source type</label><select id="node-config-input-contentSourceType"><option value="msg">msg</option><option value="str">str</option><option value="flow">flow</option><option value="global">global</option><option value="env">env</option><option value="bool">bool</option><option value="num">num</option><option value="json">json</option></select></div>
+  <div class="form-row"><label for="node-config-input-contentKind">content kind</label><select id="node-config-input-contentKind"><option value="auto">auto</option><option value="record">record</option><option value="file">file</option><option value="html">html</option><option value="markdown">markdown</option><option value="text">text</option></select></div>
+  <div class="form-row"><label for="node-config-input-metadataSource">metadata source</label><input id="node-config-input-metadataSource" type="text"></div>
+  <div class="form-row"><label for="node-config-input-metadataSourceType">metadata source type</label><select id="node-config-input-metadataSourceType"><option value="msg">msg</option><option value="str">str</option><option value="flow">flow</option><option value="global">global</option><option value="env">env</option><option value="bool">bool</option><option value="num">num</option><option value="json">json</option></select></div>
+  <div class="form-row"><label for="node-config-input-uriSource">uri source</label><input id="node-config-input-uriSource" type="text"></div>
+  <div class="form-row"><label for="node-config-input-uriSourceType">uri source type</label><select id="node-config-input-uriSourceType"><option value="msg">msg</option><option value="str">str</option><option value="flow">flow</option><option value="global">global</option><option value="env">env</option><option value="bool">bool</option><option value="num">num</option><option value="json">json</option></select></div>
+  <div class="form-row"><label for="node-config-input-filenameSource">filename source</label><input id="node-config-input-filenameSource" type="text"></div>
+  <div class="form-row"><label for="node-config-input-filenameSourceType">filename source type</label><select id="node-config-input-filenameSourceType"><option value="msg">msg</option><option value="str">str</option><option value="flow">flow</option><option value="global">global</option><option value="env">env</option><option value="bool">bool</option><option value="num">num</option><option value="json">json</option></select></div>
+  <div class="form-row"><label for="node-config-input-mimeTypeSource">mime type source</label><input id="node-config-input-mimeTypeSource" type="text"></div>
+  <div class="form-row"><label for="node-config-input-mimeTypeSourceType">mime type source type</label><select id="node-config-input-mimeTypeSourceType"><option value="msg">msg</option><option value="str">str</option><option value="flow">flow</option><option value="global">global</option><option value="env">env</option><option value="bool">bool</option><option value="num">num</option><option value="json">json</option></select></div>
+  <div class="form-row"><label for="node-config-input-titleSource">title source</label><input id="node-config-input-titleSource" type="text"></div>
+  <div class="form-row"><label for="node-config-input-titleSourceType">title source type</label><select id="node-config-input-titleSourceType"><option value="msg">msg</option><option value="str">str</option><option value="flow">flow</option><option value="global">global</option><option value="env">env</option><option value="bool">bool</option><option value="num">num</option><option value="json">json</option></select></div>
+  <div class="form-row"><label for="node-config-input-modifiedAtSource">modified at source</label><input id="node-config-input-modifiedAtSource" type="text"></div>
+  <div class="form-row"><label for="node-config-input-modifiedAtSourceType">modified at source type</label><select id="node-config-input-modifiedAtSourceType"><option value="msg">msg</option><option value="str">str</option><option value="flow">flow</option><option value="global">global</option><option value="env">env</option><option value="bool">bool</option><option value="num">num</option><option value="json">json</option></select></div>
+  <div class="form-row"><label for="node-config-input-checkpointSource">checkpoint source</label><input id="node-config-input-checkpointSource" type="text"></div>
+  <div class="form-row"><label for="node-config-input-checkpointSourceType">checkpoint source type</label><select id="node-config-input-checkpointSourceType"><option value="msg">msg</option><option value="str">str</option><option value="flow">flow</option><option value="global">global</option><option value="env">env</option><option value="bool">bool</option><option value="num">num</option><option value="json">json</option></select></div>
+  <div class="form-row"><label for="node-config-input-operation">operation</label><input id="node-config-input-operation" type="text"></div>
+  <div class="form-row"><label for="node-config-input-operationType">operation type</label><select id="node-config-input-operationType"><option value="msg">msg</option><option value="str">str</option><option value="flow">flow</option><option value="global">global</option><option value="env">env</option><option value="bool">bool</option><option value="num">num</option><option value="json">json</option></select></div>
+</script>
+
+<script type="text/html" data-help-name="context-weave-source-profile">
+  <p>Reusable source profile configuration.</p>
+  <p><b>Input</b> Selected by dependent nodes</p>
+  <p><b>Output</b> Referenced configuration</p>
+</script>

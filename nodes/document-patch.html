@@ -1,0 +1,57 @@
+<script type="text/javascript">
+RED.nodes.registerType("context-weave-document-patch", {
+  "category": "context weave",
+  "defaults": {
+    "name": {
+      "value": ""
+    },
+    "library": {
+      "value": "",
+      "type": "context-weave-library",
+      "required": false
+    },
+    "documentIdSource": {
+      "value": "contextWeave.documentId"
+    },
+    "documentIdSourceType": {
+      "value": "msg"
+    },
+    "metadataSource": {
+      "value": "contextWeave.patch"
+    },
+    "metadataSourceType": {
+      "value": "msg"
+    }
+  },
+  "color": "#b2d5cc",
+  "inputs": 1,
+  "outputs": 2,
+  "outputLabels": [
+    "success",
+    "error"
+  ],
+  "icon": "font-awesome/fa-book",
+  label: function () { return this.name || "document-patch"; },
+  oneditprepare: function () {
+
+  },
+  oneditsave: function () {
+
+  }
+});
+</script>
+
+<script type="text/html" data-template-name="context-weave-document-patch">
+  <div class="form-row"><label for="node-input-name">name</label><input id="node-input-name" type="text"></div>
+  <div class="form-row"><label for="node-input-library">library</label><input type="text" id="node-input-library"></div>
+  <div class="form-row"><label for="node-input-documentIdSource">document id source</label><input id="node-input-documentIdSource" type="text"></div>
+  <div class="form-row"><label for="node-input-documentIdSourceType">document id source type</label><select id="node-input-documentIdSourceType"><option value="msg">msg</option><option value="str">str</option><option value="flow">flow</option><option value="global">global</option><option value="env">env</option><option value="bool">bool</option><option value="num">num</option><option value="json">json</option></select></div>
+  <div class="form-row"><label for="node-input-metadataSource">metadata source</label><input id="node-input-metadataSource" type="text"></div>
+  <div class="form-row"><label for="node-input-metadataSourceType">metadata source type</label><select id="node-input-metadataSourceType"><option value="msg">msg</option><option value="str">str</option><option value="flow">flow</option><option value="global">global</option><option value="env">env</option><option value="bool">bool</option><option value="num">num</option><option value="json">json</option></select></div>
+</script>
+
+<script type="text/html" data-help-name="context-weave-document-patch">
+  <p>Merges metadata, reindexes filter fields only if needed.</p>
+  <p><b>Input</b> document ID + metadata patch</p>
+  <p><b>Output</b> updated descriptor</p>
+</script>

@@ -1,0 +1,57 @@
+<script type="text/javascript">
+RED.nodes.registerType("context-weave-document-list", {
+  "category": "context weave",
+  "defaults": {
+    "name": {
+      "value": ""
+    },
+    "library": {
+      "value": "",
+      "type": "context-weave-library",
+      "required": false
+    },
+    "pageSize": {
+      "value": 50
+    },
+    "cursorSource": {
+      "value": "contextWeave.cursor"
+    },
+    "cursorSourceType": {
+      "value": "msg"
+    },
+    "metadataFilter": {
+      "value": ""
+    }
+  },
+  "color": "#b2d5cc",
+  "inputs": 1,
+  "outputs": 2,
+  "outputLabels": [
+    "success",
+    "error"
+  ],
+  "icon": "font-awesome/fa-book",
+  label: function () { return this.name || "document-list"; },
+  oneditprepare: function () {
+
+  },
+  oneditsave: function () {
+    this.pageSize = Number($('#node-input-pageSize').val()); $('#node-input-pageSize').remove();
+  }
+});
+</script>
+
+<script type="text/html" data-template-name="context-weave-document-list">
+  <div class="form-row"><label for="node-input-name">name</label><input id="node-input-name" type="text"></div>
+  <div class="form-row"><label for="node-input-library">library</label><input type="text" id="node-input-library"></div>
+  <div class="form-row"><label for="node-input-pageSize">page size</label><input id="node-input-pageSize" type="number" step="any"></div>
+  <div class="form-row"><label for="node-input-cursorSource">cursor source</label><input id="node-input-cursorSource" type="text"></div>
+  <div class="form-row"><label for="node-input-cursorSourceType">cursor source type</label><select id="node-input-cursorSourceType"><option value="msg">msg</option><option value="str">str</option><option value="flow">flow</option><option value="global">global</option><option value="env">env</option><option value="bool">bool</option><option value="num">num</option><option value="json">json</option></select></div>
+  <div class="form-row"><label for="node-input-metadataFilter">metadata filter</label><input id="node-input-metadataFilter" type="text"></div>
+</script>
+
+<script type="text/html" data-help-name="context-weave-document-list">
+  <p>Returns no chunk text by default.</p>
+  <p><b>Input</b> filter/page</p>
+  <p><b>Output</b> document summaries</p>
+</script>

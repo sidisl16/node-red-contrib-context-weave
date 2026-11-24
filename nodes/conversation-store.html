@@ -1,0 +1,45 @@
+<script type="text/javascript">
+RED.nodes.registerType("context-weave-conversation-store", {
+  "category": "config",
+  "defaults": {
+    "name": {
+      "value": ""
+    },
+    "adapter": {
+      "value": "sqlite"
+    },
+    "ttlSeconds": {
+      "value": 86400
+    },
+    "maxTurns": {
+      "value": 20
+    },
+    "maxChars": {
+      "value": 24000
+    }
+  },
+  label: function () { return this.name || "conversation-store"; },
+  oneditprepare: function () {
+
+  },
+  oneditsave: function () {
+    this.ttlSeconds = Number($('#node-config-input-ttlSeconds').val()); $('#node-config-input-ttlSeconds').remove();
+    this.maxTurns = Number($('#node-config-input-maxTurns').val()); $('#node-config-input-maxTurns').remove();
+    this.maxChars = Number($('#node-config-input-maxChars').val()); $('#node-config-input-maxChars').remove();
+  }
+});
+</script>
+
+<script type="text/html" data-template-name="context-weave-conversation-store">
+  <div class="form-row"><label for="node-config-input-name">name</label><input id="node-config-input-name" type="text"></div>
+  <div class="form-row"><label for="node-config-input-adapter">adapter</label><select id="node-config-input-adapter"><option value="sqlite">sqlite</option><option value="memory">memory</option></select></div>
+  <div class="form-row"><label for="node-config-input-ttlSeconds">ttl seconds</label><input id="node-config-input-ttlSeconds" type="number" step="any"></div>
+  <div class="form-row"><label for="node-config-input-maxTurns">max turns</label><input id="node-config-input-maxTurns" type="number" step="any"></div>
+  <div class="form-row"><label for="node-config-input-maxChars">max chars</label><input id="node-config-input-maxChars" type="number" step="any"></div>
+</script>
+
+<script type="text/html" data-help-name="context-weave-conversation-store">
+  <p>Reusable conversation store configuration.</p>
+  <p><b>Input</b> Selected by dependent nodes</p>
+  <p><b>Output</b> Referenced configuration</p>
+</script>

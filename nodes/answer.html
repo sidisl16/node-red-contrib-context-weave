@@ -1,0 +1,93 @@
+<script type="text/javascript">
+RED.nodes.registerType("context-weave-answer", {
+  "category": "context weave",
+  "defaults": {
+    "name": {
+      "value": ""
+    },
+    "generationProfile": {
+      "value": "",
+      "type": "context-weave-model-profile",
+      "required": false
+    },
+    "streamMode": {
+      "value": "off"
+    },
+    "evidenceSource": {
+      "value": "contextWeave.evidence"
+    },
+    "maxEvidenceChunks": {
+      "value": 8
+    },
+    "maxEvidenceChars": {
+      "value": 24000
+    },
+    "querySource": {
+      "value": "contextWeave.query"
+    },
+    "instructions": {
+      "value": ""
+    },
+    "requireCitations": {
+      "value": true
+    },
+    "minimumCitations": {
+      "value": 1
+    },
+    "citationFormat": {
+      "value": "structured-and-numeric"
+    },
+    "noEvidenceText": {
+      "value": "I could not find evidence to answer this question."
+    },
+    "autoRetrieve": {
+      "value": false
+    },
+    "retrievalRecipe": {
+      "value": {}
+    }
+  },
+  "color": "#b2d5cc",
+  "inputs": 1,
+  "outputs": 3,
+  "outputLabels": [
+    "event",
+    "complete",
+    "error"
+  ],
+  "icon": "font-awesome/fa-book",
+  label: function () { return this.name || "answer"; },
+  oneditprepare: function () {
+    $('#node-input-retrievalRecipe').val(JSON.stringify(this.retrievalRecipe ?? {}, null, 2));
+  },
+  oneditsave: function () {
+    this.retrievalRecipe = JSON.parse($('#node-input-retrievalRecipe').val()); $('#node-input-retrievalRecipe').remove();
+    this.maxEvidenceChunks = Number($('#node-input-maxEvidenceChunks').val()); $('#node-input-maxEvidenceChunks').remove();
+    this.maxEvidenceChars = Number($('#node-input-maxEvidenceChars').val()); $('#node-input-maxEvidenceChars').remove();
+    this.minimumCitations = Number($('#node-input-minimumCitations').val()); $('#node-input-minimumCitations').remove();
+  }
+});
+</script>
+
+<script type="text/html" data-template-name="context-weave-answer">
+  <div class="form-row"><label for="node-input-name">name</label><input id="node-input-name" type="text"></div>
+  <div class="form-row"><label for="node-input-generationProfile">generation profile</label><input type="text" id="node-input-generationProfile"></div>
+  <div class="form-row"><label for="node-input-streamMode">stream mode</label><input id="node-input-streamMode" type="text"></div>
+  <div class="form-row"><label for="node-input-evidenceSource">evidence source</label><input id="node-input-evidenceSource" type="text"></div>
+  <div class="form-row"><label for="node-input-maxEvidenceChunks">max evidence chunks</label><input id="node-input-maxEvidenceChunks" type="number" step="any"></div>
+  <div class="form-row"><label for="node-input-maxEvidenceChars">max evidence chars</label><input id="node-input-maxEvidenceChars" type="number" step="any"></div>
+  <div class="form-row"><label for="node-input-querySource">query source</label><input id="node-input-querySource" type="text"></div>
+  <div class="form-row"><label for="node-input-instructions">instructions</label><input id="node-input-instructions" type="text"></div>
+  <div class="form-row"><label for="node-input-requireCitations">require citations</label><input id="node-input-requireCitations" type="checkbox"></div>
+  <div class="form-row"><label for="node-input-minimumCitations">minimum citations</label><input id="node-input-minimumCitations" type="number" step="any"></div>
+  <div class="form-row"><label for="node-input-citationFormat">citation format</label><input id="node-input-citationFormat" type="text"></div>
+  <div class="form-row"><label for="node-input-noEvidenceText">no evidence text</label><input id="node-input-noEvidenceText" type="text"></div>
+  <div class="form-row"><label for="node-input-autoRetrieve">auto retrieve</label><input id="node-input-autoRetrieve" type="checkbox"></div>
+  <div class="form-row"><label for="node-input-retrievalRecipe">retrieval recipe</label><textarea id="node-input-retrievalRecipe" rows="3" style="width:70%"></textarea></div>
+</script>
+
+<script type="text/html" data-help-name="context-weave-answer">
+  <p>Grounded answer from evidence only by default. Combines retrieve+rerank only when “retrieve automatically” is enabled.</p>
+  <p><b>Input</b> query + evidence</p>
+  <p><b>Output</b> answer, citations, trace</p>
+</script>

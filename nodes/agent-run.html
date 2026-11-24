@@ -1,0 +1,98 @@
+<script type="text/javascript">
+RED.nodes.registerType("context-weave-agent-run", {
+  "category": "context weave",
+  "defaults": {
+    "name": {
+      "value": ""
+    },
+    "generationProfile": {
+      "value": "",
+      "type": "context-weave-model-profile",
+      "required": false
+    },
+    "streamMode": {
+      "value": "off"
+    },
+    "querySource": {
+      "value": "contextWeave.query"
+    },
+    "store": {
+      "value": "",
+      "type": "context-weave-conversation-store",
+      "required": false
+    },
+    "library": {
+      "value": "",
+      "type": "context-weave-library",
+      "required": false
+    },
+    "tools": {
+      "value": []
+    },
+    "maxToolCalls": {
+      "value": 5
+    },
+    "timeoutSeconds": {
+      "value": 60
+    },
+    "instructions": {
+      "value": ""
+    },
+    "requireCitations": {
+      "value": true
+    },
+    "evidenceSource": {
+      "value": "contextWeave.evidence"
+    },
+    "maxEvidenceChunks": {
+      "value": 8
+    },
+    "maxEvidenceChars": {
+      "value": 24000
+    }
+  },
+  "color": "#b2d5cc",
+  "inputs": 1,
+  "outputs": 3,
+  "outputLabels": [
+    "event",
+    "complete",
+    "error"
+  ],
+  "icon": "font-awesome/fa-book",
+  label: function () { return this.name || "agent-run"; },
+  oneditprepare: function () {
+    $('#node-input-tools').val(JSON.stringify(this.tools ?? [], null, 2));
+  },
+  oneditsave: function () {
+    this.tools = JSON.parse($('#node-input-tools').val()); $('#node-input-tools').remove();
+    this.maxToolCalls = Number($('#node-input-maxToolCalls').val()); $('#node-input-maxToolCalls').remove();
+    this.timeoutSeconds = Number($('#node-input-timeoutSeconds').val()); $('#node-input-timeoutSeconds').remove();
+    this.maxEvidenceChunks = Number($('#node-input-maxEvidenceChunks').val()); $('#node-input-maxEvidenceChunks').remove();
+    this.maxEvidenceChars = Number($('#node-input-maxEvidenceChars').val()); $('#node-input-maxEvidenceChars').remove();
+  }
+});
+</script>
+
+<script type="text/html" data-template-name="context-weave-agent-run">
+  <div class="form-row"><label for="node-input-name">name</label><input id="node-input-name" type="text"></div>
+  <div class="form-row"><label for="node-input-generationProfile">generation profile</label><input type="text" id="node-input-generationProfile"></div>
+  <div class="form-row"><label for="node-input-streamMode">stream mode</label><input id="node-input-streamMode" type="text"></div>
+  <div class="form-row"><label for="node-input-querySource">query source</label><input id="node-input-querySource" type="text"></div>
+  <div class="form-row"><label for="node-input-store">store</label><input type="text" id="node-input-store"></div>
+  <div class="form-row"><label for="node-input-library">library</label><input type="text" id="node-input-library"></div>
+  <div class="form-row"><label for="node-input-tools">tools</label><textarea id="node-input-tools" rows="3" style="width:70%"></textarea></div>
+  <div class="form-row"><label for="node-input-maxToolCalls">max tool calls</label><input id="node-input-maxToolCalls" type="number" step="any"></div>
+  <div class="form-row"><label for="node-input-timeoutSeconds">timeout seconds</label><input id="node-input-timeoutSeconds" type="number" step="any"></div>
+  <div class="form-row"><label for="node-input-instructions">instructions</label><input id="node-input-instructions" type="text"></div>
+  <div class="form-row"><label for="node-input-requireCitations">require citations</label><input id="node-input-requireCitations" type="checkbox"></div>
+  <div class="form-row"><label for="node-input-evidenceSource">evidence source</label><input id="node-input-evidenceSource" type="text"></div>
+  <div class="form-row"><label for="node-input-maxEvidenceChunks">max evidence chunks</label><input id="node-input-maxEvidenceChunks" type="number" step="any"></div>
+  <div class="form-row"><label for="node-input-maxEvidenceChars">max evidence chars</label><input id="node-input-maxEvidenceChars" type="number" step="any"></div>
+</script>
+
+<script type="text/html" data-help-name="context-weave-agent-run">
+  <p>Executes a bounded tool loop with approved `ContextWeave` retrieval tools and explicit HTTP tools.</p>
+  <p><b>Input</b> user input + tool config</p>
+  <p><b>Output</b> answer, events, trace</p>
+</script>

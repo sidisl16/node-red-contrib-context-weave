@@ -1,0 +1,72 @@
+<script type="text/javascript">
+RED.nodes.registerType("context-weave-context", {
+  "category": "context weave",
+  "defaults": {
+    "name": {
+      "value": ""
+    },
+    "library": {
+      "value": "",
+      "type": "context-weave-library",
+      "required": false
+    },
+    "evidenceSource": {
+      "value": "contextWeave.evidence"
+    },
+    "evidenceSourceType": {
+      "value": "msg"
+    },
+    "contextMode": {
+      "value": "sentences"
+    },
+    "sentencesBefore": {
+      "value": 1
+    },
+    "sentencesAfter": {
+      "value": 1
+    },
+    "charactersBefore": {
+      "value": 100
+    },
+    "charactersAfter": {
+      "value": 100
+    }
+  },
+  "color": "#b2d5cc",
+  "inputs": 1,
+  "outputs": 2,
+  "outputLabels": [
+    "success",
+    "error"
+  ],
+  "icon": "font-awesome/fa-book",
+  label: function () { return this.name || "context"; },
+  oneditprepare: function () {
+
+  },
+  oneditsave: function () {
+    this.sentencesBefore = Number($('#node-input-sentencesBefore').val()); $('#node-input-sentencesBefore').remove();
+    this.sentencesAfter = Number($('#node-input-sentencesAfter').val()); $('#node-input-sentencesAfter').remove();
+    this.charactersBefore = Number($('#node-input-charactersBefore').val()); $('#node-input-charactersBefore').remove();
+    this.charactersAfter = Number($('#node-input-charactersAfter').val()); $('#node-input-charactersAfter').remove();
+  }
+});
+</script>
+
+<script type="text/html" data-template-name="context-weave-context">
+  <div class="form-row"><label for="node-input-name">name</label><input id="node-input-name" type="text"></div>
+  <div class="form-row"><label for="node-input-library">library</label><input type="text" id="node-input-library"></div>
+  <div class="form-row"><label for="node-input-evidenceSource">evidence source</label><input id="node-input-evidenceSource" type="text"></div>
+  <div class="form-row"><label for="node-input-evidenceSourceType">evidence source type</label><select id="node-input-evidenceSourceType"><option value="msg">msg</option><option value="str">str</option><option value="flow">flow</option><option value="global">global</option><option value="env">env</option><option value="bool">bool</option><option value="num">num</option><option value="json">json</option></select></div>
+  <div class="form-row"><label for="node-input-contextMode">context mode</label><input id="node-input-contextMode" type="text"></div>
+  <div class="form-row"><label for="node-input-sentencesBefore">sentences before</label><input id="node-input-sentencesBefore" type="number" step="any"></div>
+  <div class="form-row"><label for="node-input-sentencesAfter">sentences after</label><input id="node-input-sentencesAfter" type="number" step="any"></div>
+  <div class="form-row"><label for="node-input-charactersBefore">characters before</label><input id="node-input-charactersBefore" type="number" step="any"></div>
+  <div class="form-row"><label for="node-input-charactersAfter">characters after</label><input id="node-input-charactersAfter" type="number" step="any"></div>
+</script>
+
+<script type="text/html" data-help-name="context-weave-context">
+  <p>Adds surrounding text and/or highlight ranges. Cannot request sentence and character windows together.</p>
+  <p><b>Input</b> evidence</p>
+  <p><b>Output</b> enriched evidence</p>
+</script>

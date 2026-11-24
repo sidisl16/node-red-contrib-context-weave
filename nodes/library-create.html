@@ -1,0 +1,41 @@
+<script type="text/javascript">
+RED.nodes.registerType("context-weave-library-create", {
+  "category": "context weave",
+  "defaults": {
+    "name": {
+      "value": ""
+    },
+    "library": {
+      "value": "",
+      "type": "context-weave-library",
+      "required": false
+    }
+  },
+  "color": "#b2d5cc",
+  "inputs": 1,
+  "outputs": 2,
+  "outputLabels": [
+    "success",
+    "error"
+  ],
+  "icon": "font-awesome/fa-book",
+  label: function () { return this.name || "library-create"; },
+  oneditprepare: function () {
+
+  },
+  oneditsave: function () {
+
+  }
+});
+</script>
+
+<script type="text/html" data-template-name="context-weave-library-create">
+  <div class="form-row"><label for="node-input-name">name</label><input id="node-input-name" type="text"></div>
+  <div class="form-row"><label for="node-input-library">library</label><input type="text" id="node-input-library"></div>
+</script>
+
+<script type="text/html" data-help-name="context-weave-library-create">
+  <p>Creates storage/index namespaces and persists metadata schema. Idempotency key supported.</p>
+  <p><b>Input</b> optional `msg.contextWeave.librarySpec`</p>
+  <p><b>Output</b> library descriptor</p>
+</script>
