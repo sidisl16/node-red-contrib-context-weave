@@ -5,25 +5,25 @@ on:
     branches: [main]
     paths:
       - package.json
-      - package-lock.json
   workflow_dispatch:
 
 # npm trusted publishing exchanges this short-lived GitHub OIDC identity for
 # publish access. Do not add an NPM_TOKEN secret to this workflow.
 permissions:
   contents: read
-  id-token: write
 
 concurrency:
   group: npm-publish-main
   cancel-in-progress: false
 
 jobs:
-  publish:
+  verify:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: '24'
@@ -31,8 +31,33 @@ jobs:
           package-manager-cache: false
       - run: npm ci --ignore-scripts
       - run: npm run build
+      - run: git diff --exit-code && test -z "$(git ls-files --others --exclude-standard)"
       - run: npm run check
       - run: npm test
       - run: npm audit --audit-level=high
       - run: npm pack --dry-run
-      - run: npm publish
+  publish:
+    needs: verify
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Publish unreleased version using npm trusted publishing
+        shell: bash
+        run: |
+          version=$(node -p "require('./package.json').version")
+          status=$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' "https://registry.npmjs.org/node-red-contrib-context-weave/$version")
+          case "$status" in
+            200) echo "Version $version already exists." ;;
+            404) npm publish --ignore-scripts --access public --registry=https://registry.npmjs.org ;;
+            *) echo "Registry check failed (HTTP $status)." >&2; exit 1 ;;
+          esac
