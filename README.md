@@ -1,8 +1,10 @@
 # ContextWeave for Node-RED
 
-[![Build](https://github.com/sidisl16/node-red-contrib-context-weave/actions/workflows/ci.yml/badge.svg?event=pull_request)](https://github.com/sidisl16/node-red-contrib-context-weave/actions/workflows/ci.yml)
-[![Quality checks](https://github.com/sidisl16/node-red-contrib-context-weave/actions/workflows/quality.yml/badge.svg?event=pull_request)](https://github.com/sidisl16/node-red-contrib-context-weave/actions/workflows/quality.yml)
-[![Unit-test line coverage: 91.05%](https://img.shields.io/badge/unit%20test%20coverage-91.05%25-brightgreen)](https://github.com/sidisl16/node-red-contrib-context-weave/actions/workflows/quality.yml)
+![Build tested on Node.js 24 and 26](https://img.shields.io/badge/build-Node.js%2024%20%7C%2026-blue)
+![Release quality checks passed](https://img.shields.io/badge/release%20quality%20checks-passed-brightgreen)
+![Unit-test line coverage 91.05%](https://img.shields.io/badge/unit%20test%20coverage-91.05%25-brightgreen)
+
+These badges describe the published release. The build runs on Node.js 24 and 26, and unit tests cover 91.05% of source lines.
 
 ## What is ContextWeave?
 
@@ -12,7 +14,7 @@ New to the nodes? Open the **[complete node user guide](docs/node-user-guide.md)
 
 ## Getting started
 
-1. Use Node.js 24.14+ with SQLite FTS5 support and Node-RED 5.0.10+. From the cloned package directory, run `npm pack`. From your Node-RED user directory, run `npm install /absolute/path/to/node-red-contrib-context-weave-0.1.0.tgz` and restart Node-RED.
+1. Use Node.js 24.14+ with SQLite FTS5 support and Node-RED 5.0.10+. From your Node-RED user directory, run `npm install node-red-contrib-context-weave` and restart Node-RED.
 2. Start Ollama on the Node-RED host. Run `ollama pull nomic-embed-text` and `ollama pull llama3.2`. The example connects to `http://localhost:11434`.
 3. Open **Menu → Import → Examples → node-red-contrib-context-weave → support-rag**, then deploy the flow. You can also import [the flow JSON](examples/support-rag.json) directly.
 4. Click **Index sample password-reset article**. When **Index result** appears in Debug, click **Ask about password reset**. The response should cite the article and say that the link expires after 30 minutes.

@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-context-weave",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Connector-first retrieval and grounded answers for Node-RED",
   "license": "MIT",
   "repository": {
