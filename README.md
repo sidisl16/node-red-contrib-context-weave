@@ -99,13 +99,14 @@ See the [node user guide](docs/node-user-guide.md), [design blueprint](docs/desi
 
 ## Release to npm
 
-Merge a version bump in `package.json` to `main`, or manually run **Publish npm package** on `main`. A read-only job rebuilds, tests and audits the package. A separate runner publishes the verified commit with lifecycle scripts disabled and a short-lived GitHub identity. An already-published version is skipped.
+To run the standalone build, open **GitHub → Actions → Build → Run workflow**, select the branch to test, and click **Run workflow**.
 
-One-time setup is required before the first automated release:
+To release a new version:
 
-1. Keep your chosen repository visibility. Public repositories also qualify for automatic npm provenance.
-2. Publish `0.1.0` manually with `npm publish --access public`, after running the checks above.
-3. In npmjs.com, open this package’s **Settings → Trusted Publisher**, select **GitHub Actions**, and enter owner `sidisl16`, repository `node-red-contrib-context-weave` and workflow filename `publish.yml`. Leave the environment blank and allow direct `npm publish`.
-4. On `main`, increase `version` with `npm version patch`, commit the updated `package.json` and lockfile, then push. The workflow publishes that new version.
+1. Run `npm version patch --no-git-tag-version` on a release branch. Commit both `package.json` and `package-lock.json`, then merge the change into `main`.
+2. Open **Actions → Publish npm package → Run workflow**, select **main**, and click **Run workflow**.
+3. Open the run to see the verification and publish results. The workflow rebuilds, tests and audits the package before publishing with npm trusted publishing. It skips versions already present on npm.
+
+The npm trusted publisher for this package is `sidisl16/node-red-contrib-context-weave`, workflow `publish.yml`.
 
 After npm accepts the package, submit its npm name manually at [the Node-RED Flow Library add-node page](https://flows.nodered.org/add/node). New catalogue submissions are not automatic.
