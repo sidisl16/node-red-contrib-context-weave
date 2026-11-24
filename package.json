@@ -3,7 +3,13 @@
   "version": "0.1.0",
   "description": "Connector-first retrieval and grounded answers for Node-RED",
   "license": "MIT",
-  "repository": "github:sidisl16/node-red-contrib-context-weave",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sidisl16/node-red-contrib-context-weave.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "engines": {
     "node": ">=24.14.0"
   },
