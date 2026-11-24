@@ -105,7 +105,7 @@ To release a new version:
 
 1. Run `npm version patch --no-git-tag-version` on a release branch. Commit both `package.json` and `package-lock.json`, then merge the change into `main`.
 2. Open **Actions → Publish npm package → Run workflow**, select **main**, and click **Run workflow**.
-3. Open the run to see the verification and publish results. The workflow rebuilds, tests and audits the package before publishing with npm trusted publishing. It skips versions already present on npm.
+3. Open the run to see the verification and publish results. The workflow rebuilds, tests and audits the package before publishing with npm trusted publishing. Each successful publish moves the npm `latest` tag to that version. Running the workflow again for an existing version skips publication and preserves the current tag.
 
 The npm trusted publisher for this package is `sidisl16/node-red-contrib-context-weave`, workflow `publish.yml`.
 
