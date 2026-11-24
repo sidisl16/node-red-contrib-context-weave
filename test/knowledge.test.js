@@ -24,6 +24,17 @@ function setup(t) {
   return {ctx,record};
 }
 
+test('imported library defaults isolate tenants and evidence carries its outbound policy',async t=>{
+  const {ctx,record}=setup(t);
+  delete ctx.library.options.accessPolicy;
+  await record('private','password reset');
+  ctx.cw.query='password';
+  await ops.retrieve(ctx);
+  assert.equal(ctx.cw.evidence[0].privacy,'local-only');
+  delete ctx.msg.auth;
+  await assert.rejects(ops.retrieve(ctx),{code:'POLICY'});
+});
+
 test('index is durable, idempotent and removes obsolete chunks and FTS entries',async t=>{
   const {ctx,record}=setup(t);
   const chunks=[{chunkId:'a',text:'password reset'},{chunkId:'b',text:'obsolete word'}];

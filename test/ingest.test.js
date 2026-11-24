@@ -95,7 +95,7 @@ test('remote extractor sends file bytes to configured service and caps extracted
     assert.equal(options.redirect,'error');
     return new Response(received === 'large' ? 'a'.repeat(1024*1024+1) : 'Page one');
   });
-  const ctx = context({}, { extractor:'tika', maxFileMb:1 }, { tika:{options:{baseUrl:'http://127.0.0.1:9998'}} });
+  const ctx = context({}, { extractor:'tika', maxFileMb:1 }, { tika:{options:{adapter:'tika',baseUrl:'http://127.0.0.1:9998'}} });
   ctx.cw.source = { documentId:'d', content:{ kind:'file', data:Buffer.from('pdf'), mimeType:'application/pdf' } };
   await operations['parse-content'](ctx);
   assert.equal(received, 'pdf');
