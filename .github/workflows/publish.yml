@@ -37,7 +37,7 @@ jobs:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       id-token: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -47,13 +47,22 @@ jobs:
         with:
           node-version: '24'
           package-manager-cache: false
-      - name: Publish unreleased version using npm trusted publishing
+      - name: Publish npm package and create GitHub Release
         shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           version=$(node -p "require('./package.json').version")
+          tag="v$version"
           status=$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' "https://registry.npmjs.org/node-red-contrib-context-weave/$version")
           case "$status" in
             200) echo "Version $version already exists." ;;
             404) npm publish --tag latest --ignore-scripts --access public --registry=https://registry.npmjs.org ;;
             *) echo "Registry check failed (HTTP $status)." >&2; exit 1 ;;
           esac
+
+          if gh release view "$tag" >/dev/null 2>&1; then
+            echo "GitHub Release $tag already exists."
+          else
+            gh release create "$tag" --target "$GITHUB_SHA" --title "ContextWeave $tag" --generate-notes --latest
+          fi
