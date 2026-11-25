@@ -34,11 +34,14 @@ assert.match(fs.readFileSync('nodes/retrieve.html','utf8'),/<option value="hybri
 assert.match(fs.readFileSync('README.md','utf8'),/\[complete node user guide\]\(docs\/node-user-guide\.md\)/);
 assert.equal(pkg.publishConfig?.access,'public');
 assert.equal(pkg.repository?.url,'git+https://github.com/sidisl16/node-red-contrib-context-weave.git');
-assert.match(publishWorkflow,/branches: \[main\]/);
+assert.match(publishWorkflow,/workflow_dispatch:/);
+assert.doesNotMatch(publishWorkflow,/^\s*push:/m);
 assert.match(publishWorkflow,/id-token: write/);
+assert.match(publishWorkflow,/contents: write/);
 assert.match(publishWorkflow,/npm run build/);
 assert.match(publishWorkflow,/npm test/);
 assert.match(publishWorkflow,/npm publish/);
+assert.match(publishWorkflow,/gh release create/);
 const flow = require('../examples/support-rag.json');
 const ids = new Set(flow.map(n=>n.id));
 assert.equal(ids.size,flow.length);
