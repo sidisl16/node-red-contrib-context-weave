@@ -47,6 +47,8 @@ jobs:
         with:
           node-version: '24'
           package-manager-cache: false
+      - name: Enable OIDC dist-tag support
+        run: npm install --global npm@11.21.0
       - name: Publish npm package and create GitHub Release
         shell: bash
         env:
@@ -56,7 +58,10 @@ jobs:
           tag="v$version"
           status=$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' "https://registry.npmjs.org/node-red-contrib-context-weave/$version")
           case "$status" in
-            200) echo "Version $version already exists." ;;
+            200)
+              echo "Version $version already exists. Updating its latest tag."
+              npm dist-tag add "node-red-contrib-context-weave@$version" latest --registry=https://registry.npmjs.org
+              ;;
             404) npm publish --tag latest --ignore-scripts --access public --registry=https://registry.npmjs.org ;;
             *) echo "Registry check failed (HTTP $status)." >&2; exit 1 ;;
           esac
