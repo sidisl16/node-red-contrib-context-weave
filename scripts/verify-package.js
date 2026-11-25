@@ -41,6 +41,8 @@ assert.match(publishWorkflow,/contents: write/);
 assert.match(publishWorkflow,/npm run build/);
 assert.match(publishWorkflow,/npm test/);
 assert.match(publishWorkflow,/npm publish/);
+assert.match(publishWorkflow,/npm dist-tag add/);
+assert.match(publishWorkflow,/npm@11\.21\.0/);
 assert.match(publishWorkflow,/gh release create/);
 const flow = require('../examples/support-rag.json');
 const ids = new Set(flow.map(n=>n.id));
